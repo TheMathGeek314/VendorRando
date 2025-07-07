@@ -5,16 +5,7 @@ using Satchel;
 
 namespace VendorRando {
     public class SlyContainer: VendorContainer<SlyContainer> {
-        /*private static GameObject npcObject;
-        private static Vector3 npcOffset;
-        private static GameObject menuObject;
-        private static List<GameObject> otherObjects;
-        private static List<Vector3> objectOffset;
-        private List<GameObject> myObjects;
-        private ContainerInfo myInfo;*/
-
-        public override string Name => "Sly";
-        //public override bool SupportsInstantiate => true;
+        public override string Name => Consts.Sly;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Basement Closed"];
@@ -24,51 +15,30 @@ namespace VendorRando {
         }
 
         public override GameObject GetNewContainer(ContainerInfo info) {
-            GameObject sly = GameObject.Instantiate(npcObject);
-            foreach(PlayMakerFSM fsm in sly.GetComponents<PlayMakerFSM>()) {
-                if(fsm.gameObject.name.StartsWith("Basement Closed") && fsm.FsmName == "Control") {
-                    sly.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);
-                    doIgnoreProximity(sly.FindGameObjectInChildren("Sly Shop"));
-                }
-            }
+            return GetNewContainer(info, "");
+        }
 
-            GameObject.Instantiate(menuObject, new Vector3(8.53f, 0.54f, -1.8609f), Quaternion.identity).SetActive(true);
-            myObjects ??= new();
-            foreach(GameObject obj in otherObjects) {
-                myObjects.Add(GameObject.Instantiate(obj));
+        public GameObject GetNewContainer(ContainerInfo info, string requiredBool) {
+            GameObject sly = base.GetNewContainer(info, true, requiredBool);
+            foreach(PlayMakerFSM fsm in sly.GetComponentsInChildren<PlayMakerFSM>()) {
+                if(fsm.gameObject.name.StartsWith("Basement Closed") && fsm.FsmName.StartsWith("Control")) {
+                    sly.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);
+                }
             }
             return sly;
         }
 
-        /*public override void ApplyTargetContext(GameObject obj, float x, float y, float elevation) {
-            obj.transform.position = new Vector3(x, y - elevation, 0) + npcOffset;
-            obj.SetActive(true);
-            for(int i = 0; i < myObjects.Count; i++) {
-                myObjects[i].transform.position = new Vector3(x, y - elevation, 0) + objectOffset[i];
-                myObjects[i].SetActive(true);
+        protected override void editConvCtrl(PlayMakerFSM convCtrl, GameObject npc, GameObject shopRegion, GameObject shopMenu) {
+            base.editConvCtrl(convCtrl, npc, shopRegion, shopMenu);
+            convCtrl.FsmVariables.GetFsmGameObject("Shop Menu").Value = shopMenu;
+            convCtrl.GetValidState("Store Key").RemoveAction(0);//Find Shop Menu
+            foreach((string state, int index, GameObject go) in new (string, int, GameObject)[] {
+                ("To Shop", 2, npc),//NPC TITLE DOWN
+                ("To Shop", 3, shopRegion),//DO SHOP OPEN
+                ("Box Down", 1, npc)//NPC TITLE DOWN
+            }) {
+                setTargetToGameObject(convCtrl.GetValidState(state), index, go);
             }
         }
-
-        public override void ApplyTargetContext(GameObject obj, GameObject target, float elevation) {
-            ApplyTargetContext(obj, target.transform.position.x, target.transform.position.y, elevation);
-        }
-
-        protected static void addObject(Dictionary<string, GameObject> po, string name, float x, float y, float z) {
-            otherObjects ??= new();
-            objectOffset ??= new();
-            otherObjects.Add(po[name]);
-            objectOffset.Add(new Vector3(x, y, z));
-        }
-
-        protected void doIgnoreProximity(GameObject npcObj) {
-            PlayMakerFSM[] fsms = npcObj.GetComponents<PlayMakerFSM>();
-            for(int i = 0; i < fsms.Length; i++) {
-                if(fsms[i].FsmName == "npc_control") {
-                    fsms[i].GetValidState("Move Hero Left").InsertAction(new IgnoreProximity(), 0);
-                    fsms[i].GetValidState("Move Hero Right").InsertAction(new IgnoreProximity(), 0);
-                    break;
-                }
-            }
-        }*/
     }
 }

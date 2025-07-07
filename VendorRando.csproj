@@ -11,6 +11,7 @@
     <RootNamespace>VendorRando</RootNamespace>
     <AssemblyName>VendorRando</AssemblyName>
     <TargetFramework>net472</TargetFramework>
+    <!-->TargetFramework>net7.0</TargetFramework-->
     <AssemblyTitle>VendorRando</AssemblyTitle>
     <Product>VendorRando</Product>
     <Description>A Hollow Knight Mod</Description>
@@ -51,6 +52,27 @@
     </GetFileHash>
     <WriteLinesToFile File="$(ExportDir)/$(TargetName)/SHA.txt" Lines="$(OutputFileString);@(FilesWithHashes->'%(FileHash)');$(OutputZipString);@(ZipFilesWithHashes->'%(FileHash)')" Overwrite="true" Encoding="UTF-8" />
   </Target>
+  <ItemGroup>
+    <Compile Remove="SecondAttempt\**" />
+    <EmbeddedResource Remove="SecondAttempt\**" />
+    <None Remove="SecondAttempt\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\logic.json" />
+    <None Remove="Resources\pin_charm_slug.png" />
+    <None Remove="Resources\pin_shop_leg_eater.png" />
+    <None Remove="Resources\pin_shop_mapper.png" />
+    <None Remove="Resources\pin_shop_relic_dealer.png" />
+    <None Remove="Resources\pin_shop_sly.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\logic.json" />
+    <EmbeddedResource Include="Resources\Pins\pin_charm_slug.png" />
+    <EmbeddedResource Include="Resources\Pins\pin_shop_leg_eater.png" />
+    <EmbeddedResource Include="Resources\Pins\pin_shop_mapper.png" />
+    <EmbeddedResource Include="Resources\Pins\pin_shop_relic_dealer.png" />
+    <EmbeddedResource Include="Resources\Pins\pin_shop_sly.png" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp.dll</HintPath>
@@ -96,6 +118,9 @@
     </Reference>
     <Reference Include="PlayMaker">
       <HintPath>$(HollowKnightRefs)/PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="QoL">
+      <HintPath>..\_dependencies\QoL.dll</HintPath>
     </Reference>
     <Reference Include="RandomizerCore">
       <HintPath>..\_dependencies\RandomizerCore.dll</HintPath>
