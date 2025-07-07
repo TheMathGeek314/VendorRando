@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Vr-Sly",
+    "logic": "Room_shop[left1] + Rescued_Sly"
+  },
+  {
+    "name": "Vr-Salubra",
+    "logic": "Room_Charm_Shop[left1]"
+  },
+  {
+    "name": "Vr-Iselda",
+    "logic": "Room_mapper[left1]"
+  },
+  {
+    "name": "Vr-Leg_Eater",
+    "logic": "Fungus2_26[left1]"
+  },
+  {
+    "name": "Vr-Lemm",
+    "logic": "Ruins1_05b[top1] + Ruins1_27[left1]/"
+  },
+  {
+    "name": "Vr-Sly_(Key)",
+    "logic": "*Vr-Sly"
+  },
+  {
+    "name": "Vr-Salubra_(Requires_Charms)",
+    "logic": "*Salubra"
+  }
+]
