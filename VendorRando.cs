@@ -1,14 +1,8 @@
 ﻿using Modding;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using HutongGames.PlayMaker;
-using Satchel;
 using ItemChanger;
-using MenuChanger;
-using HutongGames.PlayMaker.Actions;
 using RandomizerMod.IC;
 
 namespace VendorRando {
@@ -32,68 +26,7 @@ namespace VendorRando {
             On.PlayMakerFSM.OnEnable += editFsm;
 
             RandoInterop.HookRandomizer();
-
-            //ModHooks.HeroUpdateHook += heroUpdate;
-            //On.HutongGames.PlayMaker.Fsm.Event_FsmEventTarget_FsmEvent += fsmEventTarget;
         }
-
-        /*private void heroUpdate() {
-            if(Input.GetKeyDown(KeyCode.O)) {
-                vlog("pressed o");
-                //Dictionary<string, string> receivedEvents = new();
-                List<(string, string)> receivedEvents = new();
-                foreach(var go in GameObject.FindObjectsOfType<GameObject>(true)) {
-                    foreach(var fsm in go.GetComponentsInChildren<PlayMakerFSM>()) {
-                        foreach(var fsmevent in fsm.FsmEvents) {
-                            string key = $"{go.name} - {fsm.FsmName}";
-                            receivedEvents.Add((key, fsmevent.Name));
-                        }
-                    }
-                }
-                foreach(var go in GameObject.FindObjectsOfType<GameObject>()) {
-                    foreach(var fsm in go.GetComponentsInChildren<PlayMakerFSM>()) {
-                        foreach(string soughtEvent in new string[] { "SCENE BLANKER OFF", "SCENE BLANKER ON", "SHOP REGION ACTIVE" }) {
-                            if(new List<FsmEvent>(fsm.FsmEvents).Contains(FsmEvent.GetFsmEvent(soughtEvent))) {
-                                //vlog($"Found event {soughtEvent} on {fsm.gameObject.name}-{fsm.FsmName}");
-                            }
-                        }
-                        foreach(FsmState state in fsm.FsmStates) {
-                            foreach(FsmStateAction action in state.Actions) {
-                                if(action.GetType() == typeof(SendEventByName)) {
-                                    if(((SendEventByName)action).eventTarget.target == FsmEventTarget.EventTarget.BroadcastAll) {
-                                        if(!(new List<string>() {
-                                            "Attack Reminder", "Charm Effects", "Damage Effect", "Dream Dialogue", "Dream Dialogue (2)",
-                                            "Inventory", "Jump Reminder", "Knight", "Map Key", "Tut_tablet_top", "Tut_tablet_top (1)",
-                                            "Tut_tablet_top (2)", "Soul Orb", "Text", "Charms", "Inspect Region", "Hero Death"
-                                        }).Contains(fsm.Fsm.GameObjectName)) {
-                                            if(!fsm.Fsm.GameObjectName.Contains("Health")) {
-                                                //vlog("BroadcastAll found: \t" + fsm.Fsm.GameObjectName + "\t" + fsm.FsmName + "\t" + state.Name + "\t" + ((SendEventByName)action).sendEvent.Value);
-                                                processBroadcast($"{fsm.Fsm.GameObjectName} - {fsm.FsmName} - {state.Name}", ((SendEventByName)action).sendEvent.Value, receivedEvents);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /*private void processBroadcast(string source, string eventName, List<(string, string)> receivedEvents) {
-            foreach(var revent in receivedEvents) {
-                if(revent.Item2 == eventName) {
-                    vlog($"BroadcastAll found: event\t{eventName}\tsent from\t{source}\tto\t{revent.Item1}");
-                }
-            }
-        }*/
-
-        /*private void fsmEventTarget(On.HutongGames.PlayMaker.Fsm.orig_Event_FsmEventTarget_FsmEvent orig, Fsm self, FsmEventTarget eventTarget, FsmEvent fsmEvent) {
-            if(fsmEvent != null && (fsmEvent.Name == "SHOP START" || fsmEvent.Name == "SHOP STOP")) {
-                vlog($"fsmEventTarget {self.GameObjectName} - {self.ActiveState.Name} - {fsmEvent.Name}");
-            }
-            orig(self, eventTarget, fsmEvent);
-        }*/
 
         public override List<(string, string)> GetPreloadNames() {
             return [
@@ -131,9 +64,6 @@ namespace VendorRando {
 
         private void onSceneChange(On.GameManager.orig_OnNextLevelReady orig, GameManager self) {
             orig(self);
-            /*PlayerData.instance.trinket4 = 5;
-            PlayerData.instance.trinket2 = 2;//THESE SHOULD NOT STAY IN
-            PlayerData.instance.trinket3 = 12;*/
             if(IsRandoSave()) {
                 switch(self.sceneName) {
                     case "Room_shop":
@@ -223,12 +153,15 @@ namespace VendorRando {
 //      Actually fix salubra requires charms
 //      Look at the pinned guide for other integrations and features (RandoSettingsManager, major items, spoiler logging, etc)
 //      Place vanilla items in rando logic
-//      Double-check the map pin coords in dirtmouth
 //      Check the BuiltInRequests about ApplyLongLocationPreviewSettings
-//      Patch can_visit_Lemm logic while maintaining cloned Vr-Lemm location logic
 //      Vanilla Salubra's Blessing blackscreens and does not return control
 //      Make sure MoreLocations Lemm shop and LoreRando cursed listening either work right or deny access
 //      Make sure heights are properly corrected (see Geo_Rock-Deepnest_Below_Spike_Grub and *_Dupe)
 //
-//      I've created a slykey location but it's not appearing for some reason, and I suspect it has something to do with the lack of immediate logic
-//      For testing purposes, try giving it bogus logic at an acceptable time to see if this resolves anything
+//  SWITCHING TO ACCESS-ITEM-CENTRIC DESIGN
+//      RequestModifier is replaced by RequestModifier2 (subject to renaming later), and VendorPlacement is no longer in use
+//      Figure out how to access vanilla ShopPlacements in VendorUtils from GetNewContainer
+//      Lemm is probably broken too
+//      Just test everything tbh, especially shopkey
+//      Also make sure to grant logical access upon interacting with any shop in any way
+//      Also update pin locations at runtime

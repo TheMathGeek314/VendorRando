@@ -58,20 +58,12 @@
     <None Remove="SecondAttempt\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Resources\logic.json" />
-    <None Remove="Resources\pin_charm_slug.png" />
-    <None Remove="Resources\pin_shop_leg_eater.png" />
-    <None Remove="Resources\pin_shop_mapper.png" />
-    <None Remove="Resources\pin_shop_relic_dealer.png" />
-    <None Remove="Resources\pin_shop_sly.png" />
+    <None Remove="Resources\*.json" />
+    <None Remove="Resources\Pins\*.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\logic.json" />
-    <EmbeddedResource Include="Resources\Pins\pin_charm_slug.png" />
-    <EmbeddedResource Include="Resources\Pins\pin_shop_leg_eater.png" />
-    <EmbeddedResource Include="Resources\Pins\pin_shop_mapper.png" />
-    <EmbeddedResource Include="Resources\Pins\pin_shop_relic_dealer.png" />
-    <EmbeddedResource Include="Resources\Pins\pin_shop_sly.png" />
+    <EmbeddedResource Include="Resources\*.json" />
+    <EmbeddedResource Include="Resources\Pins\*.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">

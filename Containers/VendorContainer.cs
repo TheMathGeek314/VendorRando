@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using ItemChanger;
 using ItemChanger.Components;
+using ItemChanger.Internal;
 using Satchel;
-using System;
 
 namespace VendorRando {
     public abstract class VendorContainer<T>: Container where T : VendorContainer<T> {
@@ -15,6 +17,10 @@ namespace VendorRando {
         protected static List<GameObject> otherObjects;
         protected static List<Vector3> objectOffset;
         protected List<GameObject> myObjects;
+        
+        //public static string VanillaPlacement;
+        public abstract string VanillaPlacement { get; }
+        public static AbstractPlacement VanillaShopPlacement;
 
         public override bool SupportsInstantiate => true;
 
@@ -112,7 +118,25 @@ namespace VendorRando {
                         setTargetToGameObject(fsm.GetValidState(state), index, targetGO);
                     }
                     DefaultShopItems dsItems = info.giveInfo.placement.HasTag<VendorTag>() ? info.giveInfo.placement.GetTag<VendorTag>().defaultShopItems : DefaultShopItems.None;
-                    VendorUtils.EditShopControl(fsm, info.giveInfo.placement, Name, dsItems, requiredBool);
+                    //VendorUtils.EditShopControl(fsm, info.giveInfo.placement, Name, dsItems, requiredBool);
+                    //VendorUtils.EditShopControl(fsm, VanillaShopPlacement, Name, dsItems, requiredBool);
+                    Dictionary<string, AbstractPlacement> rsp = Ref.Settings.Placements;
+                    if(!rsp.ContainsKey(VanillaPlacement)) {
+                        VendorRando.vlog($"rps does not contain key for {VanillaPlacement}");
+                    }
+                    else if(rsp[VanillaPlacement] == null) {
+                        VendorRando.vlog($"rsp[{VanillaPlacement}] is null");
+                    }
+                    else {
+                        VendorRando.vlog($"rsp[{VanillaPlacement}] = " + String.Join(", ", rsp[VanillaPlacement].Items.Select(item => item.name)));
+                    }
+                    if(VanillaShopPlacement == null) {
+                        VendorRando.vlog($"VanillaShopPlacement is null for {VanillaPlacement}");
+                    }
+                    else {
+                        VendorRando.vlog($"{VanillaPlacement}.VanillaShopPlacement = " + String.Join(", ", VanillaShopPlacement.Items.Select(item => item.name)));
+                    }
+                    VendorUtils.EditShopControl(fsm, Ref.Settings.Placements.ContainsKey(VanillaPlacement) ? Ref.Settings.Placements[VanillaPlacement] : null, Name, dsItems, requiredBool);
                 }
                 if(fsm.FsmName == "Confirm Control") {
                     foreach((string state, int index, GameObject targetGO) in new (string, int, GameObject)[] {
@@ -179,7 +203,6 @@ namespace VendorRando {
             doMoreStuffs?.Invoke(fsm);
 
             gameObject.RemoveComponent<ContainerEnableConfig>();
-            // is this okay to do within its own method? ^^^
         }
     }
 }

@@ -3,12 +3,13 @@ using System.Reflection;
 using UnityEngine;
 using HutongGames.PlayMaker;
 using Modding;
-using Satchel;
 using ItemChanger;
+using Satchel;
 
 namespace VendorRando{
     public class LemmContainer: VendorContainer<LemmContainer> {
         public override string Name => Consts.Lemm;
+        public override string VanillaPlacement => LocationNames.Lemm;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Relic Dealer"];

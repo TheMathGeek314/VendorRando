@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Satchel;
 using ItemChanger;
+using Satchel;
 
 namespace VendorRando {
     public class LeggyContainer: VendorContainer<LeggyContainer> {
         public override string Name => Consts.LegEater;
+        public override string VanillaPlacement => LocationNames.Leg_Eater;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Leg Eater"];

@@ -52,6 +52,9 @@ namespace VendorRando {
                 }
             }
             //pre-decide shop locations
+            //testing for purenail
+            VendorRando.vlog($"Stone sanc mask shard is safe for sly: [{CheckCircularLogic(Consts.Sly, LocationNames.Mask_Shard_Stone_Sanctuary)}], (should be false)");
+            //testing for purenail
             foreach((bool setting, string shop, string vanillaShop) in settingsMap) {
                 if(setting) {
                     bool safeFromCircularLogic = false;
@@ -230,7 +233,7 @@ namespace VendorRando {
             void AddLocation_newVendor_slyKey() {
                 string baseLocation = vendorMap[Consts.Sly];
                 //string myLocation = $"{baseLocation}_(Key)";
-                string myLocation = Consts.SlyKey;
+                //string myLocation = Consts.SlyKey; --- commented only for Consts commented compiling
                 /*ObjectLocation objLocation = new() {
                     name = myLocation,
                     objectName = Consts.Sly,
@@ -256,7 +259,7 @@ namespace VendorRando {
                 }
                 VendorRando.vlog($"SlyKey new scene: {Finder.GetLocation(Consts.SlyKey).sceneName}");*/
 
-                rb.EditLocationRequest(myLocation, info => {
+                /*rb.EditLocationRequest(myLocation, info => { --- commented only for Consts commented compiling
                     info.customPlacementFetch = (factory, placement) => {
                         if(factory.TryFetchPlacement(myLocation, out AbstractPlacement ap)) {
                             return ap;
@@ -288,7 +291,7 @@ namespace VendorRando {
                                 gc.GeoAmount = GetShopCost(rb.rng, ri);
                         }
                     };
-                });
+                });*/
             }
 
             //original vendor location, non-vendor basic check
@@ -344,7 +347,7 @@ namespace VendorRando {
         }
 
         public static void ApplyNewSalubraCharmDef(RequestBuilder rb) {
-            (string normal, string withCharms) = VendorRando.Settings.Salubra ? (Consts.Salubra, Consts.SalubraCharms) : (LocationNames.Salubra, "Salubra_(Requires_Charms)");
+            (string normal, string withCharms) = /*VendorRando.Settings.Salubra ? (Consts.Salubra, Consts.SalubraCharms) : */(LocationNames.Salubra, "Salubra_(Requires_Charms)");// --- commented only for Consts commented compiling
             rb.EditLocationRequest(withCharms, info => {
                 info.randoLocationCreator += factory => factory.MakeLocation(normal);
                 info.onRandoLocationCreation += (factory, rl) => {

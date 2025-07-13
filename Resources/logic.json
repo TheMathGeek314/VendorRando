@@ -18,13 +18,5 @@
   {
     "name": "Vr-Lemm",
     "logic": "Ruins1_05b[top1] + Ruins1_27[left1]/"
-  },
-  {
-    "name": "Vr-Sly_(Key)",
-    "logic": "*Vr-Sly"
-  },
-  {
-    "name": "Vr-Salubra_(Requires_Charms)",
-    "logic": "*Salubra"
   }
 ]

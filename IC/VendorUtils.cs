@@ -51,17 +51,27 @@ namespace VendorRando {
         }
 
         public static GameObject[] GetNewStock(AbstractPlacement placement, string name, DefaultShopItems defaultShopItems, GameObject[] oldStock, GameObject shopPrefab, string requiredBool) {
-            List<GameObject> stock = new(oldStock.Length + placement.Items.Count);
+            //debug
+            /*var stocklength = oldStock.Length;
+            VendorRando.vlog(placement.Name);
+            var pitems = placement.Items;
+            var icount = pitems.Count;
+            List<GameObject> stock = new(stocklength + icount);*/
+            List<GameObject> stock = new();
+            //debug
+            //List<GameObject> stock = new(oldStock.Length + placement.Items.Count);
             void AddShopItem(AbstractItem item) {
                 GameObject shopItem = Object.Instantiate(shopPrefab);
                 shopItem.SetActive(false);
                 ApplyItemDef(placement, name, shopItem.GetComponent<ShopItemStats>(), item, item.GetTag<CostTag>()?.Cost, requiredBool);
                 stock.Add(shopItem);
             }
-            foreach(var item in placement.Items.Where(i => !i.WasEverObtained()))
-                AddShopItem(item);
-            foreach(var item in placement.Items.Where(i => i.WasEverObtained()))
-                AddShopItem(item);
+            if(placement != null) {//todo
+                foreach(var item in placement.Items.Where(i => !i.WasEverObtained()))
+                    AddShopItem(item);
+                foreach(var item in placement.Items.Where(i => i.WasEverObtained()))
+                    AddShopItem(item);
+            }
             string sceneName = name switch {
                 Consts.Sly => SceneNames.Room_shop,
                 Consts.Salubra => SceneNames.Room_Charm_Shop,

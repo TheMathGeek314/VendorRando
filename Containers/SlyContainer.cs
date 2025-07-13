@@ -6,6 +6,7 @@ using Satchel;
 namespace VendorRando {
     public class SlyContainer: VendorContainer<SlyContainer> {
         public override string Name => Consts.Sly;
+        public override string VanillaPlacement => LocationNames.Sly;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Basement Closed"];

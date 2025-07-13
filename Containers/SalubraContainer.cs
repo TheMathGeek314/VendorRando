@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Satchel;
 using ItemChanger;
+using Satchel;
 
 namespace VendorRando {
     public class SalubraContainer: VendorContainer<SalubraContainer> {
         public override string Name => Consts.Salubra;
+        public override string VanillaPlacement => LocationNames.Salubra;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Charm Slug"];

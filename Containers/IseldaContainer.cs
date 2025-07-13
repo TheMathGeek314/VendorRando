@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using ItemChanger;
 using Satchel;
 
 namespace VendorRando {
     public class IseldaContainer: VendorContainer<IseldaContainer> {
         public override string Name => Consts.Iselda;
+        public override string VanillaPlacement => LocationNames.Iselda;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Iselda"];
