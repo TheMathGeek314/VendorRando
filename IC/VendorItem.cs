@@ -2,7 +2,7 @@
 
 namespace VendorRando {
     public class VendorItem: VoidItem {
-        private string container;
+        public string container;
         public VendorItem(string container) {
             this.container = container;
         }

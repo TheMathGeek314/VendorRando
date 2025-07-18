@@ -38,6 +38,7 @@ namespace VendorRando {
                 ("Room_Charm_Shop", "Shop Region"),
                 ("Room_Charm_Shop", "Shop Menu"),
                 ("Room_Charm_Shop", "Scene Blanker"),
+                ("Room_Charm_Shop", "Cinematic Player"),
                 ("Room_mapper", "Iselda"),
                 ("Room_mapper", "_Scenery/Mapper_home_0001_a"),
                 ("Room_mapper", "Shop Region"),
@@ -148,20 +149,27 @@ namespace VendorRando {
     }
 }
 // TODO
-//      Lemm should not be selling items
-//      Resolve shopkey
-//      Actually fix salubra requires charms
-//      Look at the pinned guide for other integrations and features (RandoSettingsManager, major items, spoiler logging, etc)
-//      Place vanilla items in rando logic
-//      Check the BuiltInRequests about ApplyLongLocationPreviewSettings
-//      Vanilla Salubra's Blessing blackscreens and does not return control
-//      Make sure MoreLocations Lemm shop and LoreRando cursed listening either work right or deny access
+//      Vanilla Salubra's Blessing kinda works but the video is black
 //      Make sure heights are properly corrected (see Geo_Rock-Deepnest_Below_Spike_Grub and *_Dupe)
+//          Take a look at dropping into place
+//      Lantern/e-key/quill don't appear if vendor stock contains no rando'd items
+//      Sly's dirtmouth room isn't working (except for other vendors?)
 //
 //  SWITCHING TO ACCESS-ITEM-CENTRIC DESIGN
-//      RequestModifier is replaced by RequestModifier2 (subject to renaming later), and VendorPlacement is no longer in use
-//      Figure out how to access vanilla ShopPlacements in VendorUtils from GetNewContainer
-//      Lemm is probably broken too
-//      Just test everything tbh, especially shopkey
 //      Also make sure to grant logical access upon interacting with any shop in any way
 //      Also update pin locations at runtime
+//
+//  DEPENDENCIES
+//      ConnectionMetadataInjector
+//      ItemChanger
+//      MenuChanger
+//      RandomizerCore
+//      RandomizerCore.Json
+//      RandomizerMod
+//      Satchel
+//  INTEGRATIONS
+//      rando?
+//      CondensedSpoilerLogger
+//      QoL
+//      RandoSettingsManager
+//      map mod?

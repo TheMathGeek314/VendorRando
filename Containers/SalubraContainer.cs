@@ -10,20 +10,20 @@ namespace VendorRando {
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Charm Slug"];
-            npcOffset = new Vector3(0, 1.93f - 0.4081f, 0.13f);
+            npcOffset = new Vector3(19.33f, 7.93f, 0.13f);//0, 1.93f - 0.4081f, 0.13f);
             menuObject = preObjs["Shop Menu"];
-            addObject(preObjs, "shop_0000_a", 0.29f, 0.112f - 0.4081f, 0.03f);
-            addObject(preObjs, "Shop Region", 17.65f - 19.33f, 1.22f - 0.4081f, 0.009f);
-            addObject(preObjs, "Scene Blanker", 18.779f - 19.33f, 8.3673f - 0.4081f, -0.005f);
+            knightPosition = new Vector3(19.302f, 6.4081f);
+            addObject(preObjs, "shop_0000_a", 19.52f, 6.112f, 0.03f);//0.29f, 0.112f - 0.4081f, 0.03f);
+            addObject(preObjs, "Shop Region", 17.65f, 7.22f, 0.009f);//17.65f - 19.33f, 1.22f - 0.4081f, 0.009f);
+            addObject(preObjs, "Scene Blanker", 18.779f, 8.3673f, -0.005f);//18.779f - 19.33f, 8.3673f - 0.4081f, -0.005f);
+            addObject(preObjs, "Cinematic Player", 0, 0, -5.12f);
         }
 
-        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, string requiredBool) {
-            base.setupShopRegion(npc, shopRegion, shopMenu, info, requiredBool);
+        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info) {
+            base.setupShopRegion(npc, shopRegion, shopMenu, info);
             foreach(PlayMakerFSM fsm in npc.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.FsmName == "Give Blessing") {
                     setTargetToGameObject(fsm.GetValidState("End"), 4, shopRegion);//SHOP REGION ACTIVE
-                    //if Salubra's Blessing doesn't work, maybe addObject(Scene Blanker)
-                    //and consider retargeting broadcastalls (though this might be a unique enough object)
                 }
             }
         }

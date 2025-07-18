@@ -9,7 +9,11 @@ using ItemChanger.Components;
 using ItemChanger.Extensions;
 using ItemChanger.FsmStateActions;
 using ItemChanger.Internal;
+using ItemChanger.Placements;
 using ItemChanger.Util;
+using ItemChanger.Modules;
+using System.EnterpriseServices;
+using RandomizerMod.RandomizerData;
 
 namespace VendorRando {
     //everything here is taken straight from ItemChanger with minor tweaks for scoping and compatibility
@@ -31,12 +35,54 @@ namespace VendorRando {
                 checkRelics.Actions.IndexOf(relicComparison));
         }
 
-        public static void EditShopControl(PlayMakerFSM fsm, AbstractPlacement placement, string name, DefaultShopItems defaultShopItems, string requiredBool) {
+        struct UniquePlacement {
+            public AbstractPlacement placement;
+            public string name;
+            public string requiredBool;
+            public DefaultShopItems defaultShopItems;
+        }
+        public static void EditShopControl(PlayMakerFSM fsm, AbstractPlacement placement, string name) {
+            List<UniquePlacement> ups = new();
+            UniquePlacement up1 = new() { placement = placement, name = name };
+            if(placement != null)
+                up1.defaultShopItems = ((ShopPlacement)placement).defaultShopItems;
+            else if(name == Consts.Lemm)
+                up1.defaultShopItems = DefaultShopItems.LemmRelics;
+            else
+                up1.defaultShopItems = getDefaultShopItems(name);
+            ups.Add(up1);
+            //none of this worked
+            /*if(name == Consts.Sly && Ref.Settings.Placements.TryGetValue(LocationNames.Sly_Key, out AbstractPlacement keyPlacement)) {
+                UniquePlacement upShopkey = new() {
+                    placement = keyPlacement,
+                    name = Consts.Sly,
+                    requiredBool = nameof(PlayerData.gaveSlykey),
+                    defaultShopItems = ((ShopPlacement)keyPlacement).defaultShopItems
+                };
+                ups.Add(upShopkey);
+            }
+            if(name == Consts.Sly && !RandomizerMod.RandomizerMod.RS.GenerationSettings.PoolSettings.Keys) {
+                UniquePlacement upLantern = new() {
+                    placement = placement,
+                    name = Consts.Sly,
+                    requiredBool = nameof(PlayerData.hasLantern),
+                    defaultShopItems = up1.defaultShopItems | DefaultShopItems.SlyLantern
+                };
+                UniquePlacement upEkey = new() {
+                    placement = placement,
+                    name = Consts.Sly,
+                    requiredBool = nameof(PlayerData.hasWhiteKey),
+                    defaultShopItems = upLantern.defaultShopItems | DefaultShopItems.SlyKeyElegantKey
+                };
+                ups.Add(upLantern);
+                ups.Add(upEkey);
+            }*/
             ShopMenuStock shop = fsm.gameObject.GetComponent<ShopMenuStock>();
             GameObject itemPrefab = ObjectCache.ShopItem;
-            shop.stock = GetNewStock(placement, name, defaultShopItems, shop.stock, itemPrefab, requiredBool);
-            if(shop.stockAlt != null) {
-                shop.stockAlt = GetNewAltStock(name, defaultShopItems, shop.stock, shop.stockAlt);
+            foreach(UniquePlacement up in ups) {
+                shop.stock = GetNewStock(up.placement, up.name, up.defaultShopItems, shop.stock, itemPrefab, up.requiredBool);
+                if(shop.stockAlt != null)
+                    shop.stockAlt = GetNewAltStock(up.name, up.defaultShopItems, shop.stock, shop.stockAlt);
             }
             FsmState chooseNoStockConvo = fsm.GetState("Choose Convo");
             bool hasBeenEdited = chooseNoStockConvo.GetTransition(4) != null;
@@ -48,17 +94,35 @@ namespace VendorRando {
             IntCompare relicComparison = checkRelics.GetFirstActionOfType<IntCompare>();
             checkRelics.ReplaceAction(new Lambda(() => fsm.SendEvent("HAS RELIC")),
                 checkRelics.Actions.IndexOf(relicComparison));
+
+            DefaultShopItems getDefaultShopItems(string name) {
+                string scene = name switch {
+                    Consts.Sly => SceneNames.Room_shop,
+                    Consts.Salubra => SceneNames.Room_Charm_Shop,
+                    Consts.Iselda => SceneNames.Room_mapper,
+                    Consts.LegEater => SceneNames.Fungus2_26,
+                    Consts.Lemm => SceneNames.Ruins1_05b,
+                    _ => null
+                };
+                DefaultShopItems? myItems = DefaultShopItems.None;
+                for(int i = 0; i < 18; i++) {
+                    ShopItemStats stats = new() { specialType = i };
+                    DefaultShopItems? tempItem = ShopUtil.GetVanillaShopItemType(scene, stats);
+                    if(tempItem != null)
+                        myItems |= tempItem;
+                }
+                myItems &= RandomizerMod.IC.Shops.GetDefaultShopItems(RandomizerMod.RandomizerMod.RS.GenerationSettings);
+                VendorRando.vlog($"\tDefault items for {name} after &= Rando: {myItems}");
+                return myItems.GetValueOrDefault();
+            }
         }
 
         public static GameObject[] GetNewStock(AbstractPlacement placement, string name, DefaultShopItems defaultShopItems, GameObject[] oldStock, GameObject shopPrefab, string requiredBool) {
-            //debug
-            /*var stocklength = oldStock.Length;
-            VendorRando.vlog(placement.Name);
-            var pitems = placement.Items;
-            var icount = pitems.Count;
-            List<GameObject> stock = new(stocklength + icount);*/
-            List<GameObject> stock = new();
-            //debug
+            List<GameObject> stock;
+            if(placement != null)
+                stock = new(oldStock.Length + placement.Items.Count);
+            else
+                stock = new(oldStock.Length);
             //List<GameObject> stock = new(oldStock.Length + placement.Items.Count);
             void AddShopItem(AbstractItem item) {
                 GameObject shopItem = Object.Instantiate(shopPrefab);
@@ -66,7 +130,7 @@ namespace VendorRando {
                 ApplyItemDef(placement, name, shopItem.GetComponent<ShopItemStats>(), item, item.GetTag<CostTag>()?.Cost, requiredBool);
                 stock.Add(shopItem);
             }
-            if(placement != null) {//todo
+            if(placement != null) {
                 foreach(var item in placement.Items.Where(i => !i.WasEverObtained()))
                     AddShopItem(item);
                 foreach(var item in placement.Items.Where(i => i.WasEverObtained()))
@@ -85,7 +149,15 @@ namespace VendorRando {
         }
 
         public static GameObject[] GetNewAltStock(string name, DefaultShopItems defaultShopItems, GameObject[] newStock, GameObject[] altStock) {
-            return newStock.Union(altStock.Where(g => KeepOldItem(g.GetComponent<ShopItemStats>(), name, defaultShopItems))).ToArray();
+            string sceneName = name switch {
+                Consts.Sly => SceneNames.Room_shop,
+                Consts.Salubra => SceneNames.Room_Charm_Shop,
+                Consts.Iselda => SceneNames.Room_mapper,
+                Consts.LegEater => SceneNames.Fungus2_26,
+                Consts.Lemm => SceneNames.Ruins1_05b,
+                _ => null
+            };
+            return newStock.Union(altStock.Where(g => KeepOldItem(g.GetComponent<ShopItemStats>(), sceneName, defaultShopItems))).ToArray();
         }
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
@@ -99,7 +171,8 @@ namespace VendorRando {
             mod.item = item;
             mod.cost = cost;
             mod.costDisplayer = costDisplayer;
-            mod.placement = placement;
+            if(placement != null)
+                mod.placement = placement;
 
             // Apply all the stored values
             stats.playerDataBoolName = string.Empty;
@@ -120,7 +193,9 @@ namespace VendorRando {
             stats.relicPDInt = string.Empty;
 
             // Apply the sprite for the UI
-            stats.transform.Find("Item Sprite").gameObject.GetComponent<SpriteRenderer>().sprite = item.GetResolvedUIDef(placement)!.GetSprite();
+            if(placement != null)
+                stats.transform.Find("Item Sprite").gameObject.GetComponent<SpriteRenderer>().sprite = item.GetResolvedUIDef(placement)!.GetSprite();
+            //todo
 
             ISprite ispritecranberry = costDisplayer.CustomCostSprite;
             if(ispritecranberry == null) {
@@ -132,8 +207,8 @@ namespace VendorRando {
             }
         }
 
-        public static bool KeepOldItem(ShopItemStats stats, string name, DefaultShopItems defaultShopItems) {
-            DefaultShopItems? itemType = ShopUtil.GetVanillaShopItemType(name, stats);
+        public static bool KeepOldItem(ShopItemStats stats, string sceneName, DefaultShopItems defaultShopItems) {
+            DefaultShopItems? itemType = ShopUtil.GetVanillaShopItemType(sceneName, stats);
             if(itemType == null)
                 return true; // unrecognized items are kept by default
             if(itemType == DefaultShopItems.SalubraBlessing && (defaultShopItems & DefaultShopItems.SalubraNotches) == 0) {

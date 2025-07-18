@@ -10,17 +10,14 @@ namespace VendorRando {
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Basement Closed"];
-            npcOffset = new Vector3(-17.2f, -6.4081f, 0.029f);
+            npcOffset = new Vector3(0, 0, 0);//-17.2f, -6.4081f, 0.029f);
             menuObject = preObjs["Shop Menu"];
-            addObject(preObjs, "_Scenery/Shop Counter", -0.03f, -0.7281f, 0.023f);
+            knightPosition = new Vector3(17.136f, 6.4081f);
+            addObject(preObjs, "_Scenery/Shop Counter", 17.17f, 5.68f, 0.023f);//-0.03f, -0.7281f, 0.023f);
         }
 
         public override GameObject GetNewContainer(ContainerInfo info) {
-            return GetNewContainer(info, "");
-        }
-
-        public GameObject GetNewContainer(ContainerInfo info, string requiredBool) {
-            GameObject sly = base.GetNewContainer(info, true, requiredBool);
+            GameObject sly = base.GetNewContainer(info, true);
             foreach(PlayMakerFSM fsm in sly.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.gameObject.name.StartsWith("Basement Closed") && fsm.FsmName.StartsWith("Control")) {
                     sly.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
@@ -16,11 +15,10 @@ namespace VendorRando {
         protected static GameObject menuObject;
         protected static List<GameObject> otherObjects;
         protected static List<Vector3> objectOffset;
+        protected static Vector3 knightPosition;
         protected List<GameObject> myObjects;
         
-        //public static string VanillaPlacement;
         public abstract string VanillaPlacement { get; }
-        public static AbstractPlacement VanillaShopPlacement;
 
         public override bool SupportsInstantiate => true;
 
@@ -28,7 +26,7 @@ namespace VendorRando {
             return GetNewContainer(info, false);
         }
 
-        public GameObject GetNewContainer(ContainerInfo info, bool regionIsChild = false, string requiredBool = "") {
+        public GameObject GetNewContainer(ContainerInfo info, bool regionIsChild = false) {
             GameObject npc = GameObject.Instantiate(npcObject);
             GameObject myMenu = GameObject.Instantiate(menuObject, new Vector3(8.53f, 0.54f, -1.8609f), Quaternion.identity);
             myMenu.SetActive(true);
@@ -41,12 +39,12 @@ namespace VendorRando {
             }
             if(regionIsChild) {
                 GameObject region = npc.FindGameObjectInChildren("Shop Region");
-                setupShopRegion(npc, region, myMenu, info, requiredBool);
+                setupShopRegion(npc, region, myMenu, info);
             }
             foreach(GameObject obj in otherObjects) {
                 GameObject ob2 = GameObject.Instantiate(obj);
                 if(ob2.name.StartsWith("Shop Region")) {
-                    setupShopRegion(npc, ob2, myMenu, info, requiredBool);
+                    setupShopRegion(npc, ob2, myMenu, info);
                 }
                 myObjects.Add(ob2);
             }
@@ -55,10 +53,10 @@ namespace VendorRando {
         }
 
         public override void ApplyTargetContext(GameObject obj, float x, float y, float elevation) {
-            obj.transform.position = new Vector3(x, y - elevation, 0) + npcOffset;
+            obj.transform.position = new Vector3(x, y - elevation, 0) + npcOffset - knightPosition;
             obj.SetActive(true);
             for(int i = 0; i < myObjects.Count; i++) {
-                myObjects[i].transform.position = new Vector3(x, y - elevation, 0) + objectOffset[i];
+                myObjects[i].transform.position = new Vector3(x, y - elevation, 0) + objectOffset[i] - knightPosition;
                 myObjects[i].SetActive(true);
             }
         }
@@ -74,7 +72,7 @@ namespace VendorRando {
             objectOffset.Add(new Vector3(x, y, z));
         }
 
-        protected virtual void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, string requiredBool) {
+        protected virtual void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info) {
             foreach(PlayMakerFSM fsm in npc.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.FsmName == "Conversation Control") {
                     editConvCtrl(fsm, npc, shopRegion, shopMenu);
@@ -117,26 +115,12 @@ namespace VendorRando {
                     }) {
                         setTargetToGameObject(fsm.GetValidState(state), index, targetGO);
                     }
-                    DefaultShopItems dsItems = info.giveInfo.placement.HasTag<VendorTag>() ? info.giveInfo.placement.GetTag<VendorTag>().defaultShopItems : DefaultShopItems.None;
-                    //VendorUtils.EditShopControl(fsm, info.giveInfo.placement, Name, dsItems, requiredBool);
-                    //VendorUtils.EditShopControl(fsm, VanillaShopPlacement, Name, dsItems, requiredBool);
-                    Dictionary<string, AbstractPlacement> rsp = Ref.Settings.Placements;
-                    if(!rsp.ContainsKey(VanillaPlacement)) {
-                        VendorRando.vlog($"rps does not contain key for {VanillaPlacement}");
-                    }
-                    else if(rsp[VanillaPlacement] == null) {
-                        VendorRando.vlog($"rsp[{VanillaPlacement}] is null");
+                    if(Ref.Settings.Placements.TryGetValue(VanillaPlacement, out AbstractPlacement ap)) {
+                        VendorUtils.EditShopControl(fsm, ap, Name);
                     }
                     else {
-                        VendorRando.vlog($"rsp[{VanillaPlacement}] = " + String.Join(", ", rsp[VanillaPlacement].Items.Select(item => item.name)));
+                        VendorUtils.EditShopControl(fsm, null, Name);
                     }
-                    if(VanillaShopPlacement == null) {
-                        VendorRando.vlog($"VanillaShopPlacement is null for {VanillaPlacement}");
-                    }
-                    else {
-                        VendorRando.vlog($"{VanillaPlacement}.VanillaShopPlacement = " + String.Join(", ", VanillaShopPlacement.Items.Select(item => item.name)));
-                    }
-                    VendorUtils.EditShopControl(fsm, Ref.Settings.Placements.ContainsKey(VanillaPlacement) ? Ref.Settings.Placements[VanillaPlacement] : null, Name, dsItems, requiredBool);
                 }
                 if(fsm.FsmName == "Confirm Control") {
                     foreach((string state, int index, GameObject targetGO) in new (string, int, GameObject)[] {

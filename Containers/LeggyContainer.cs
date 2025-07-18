@@ -10,14 +10,15 @@ namespace VendorRando {
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Leg Eater"];
-            npcOffset = new Vector3(45.677f - 45.61f, 6.035f - 5.4081f, 0.01f);
+            npcOffset = new Vector3(45.677f/* - 45.61f*/, 6.035f/* - 5.4081f*/, 0.01f);
             menuObject = preObjs["Shop Menu"];
-            addObject(preObjs, "leg_eater_scenery_0004_a", 46.82f - 45.61f, 4.36f - 5.4081f, 0.03f);
-            addObject(preObjs, "Shop Region", 44.24f - 45.61f, 6.28f - 5.4081f, 0.009f);
+            knightPosition = new Vector3(45.9084f, 5.4081f);
+            addObject(preObjs, "leg_eater_scenery_0004_a", 46.82f/* - 45.61f*/, 4.36f/* - 5.4081f*/, 0.03f);
+            addObject(preObjs, "Shop Region", 44.24f/* - 45.61f*/, 6.28f/* - 5.4081f*/, 0.009f);
         }
 
-        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, string requiredBool) {
-            base.setupShopRegion(npc, shopRegion, shopMenu, info, requiredBool);
+        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info) {
+            base.setupShopRegion(npc, shopRegion, shopMenu, info);
             shopRegion.GetComponent<BoxCollider2D>().enabled = PlayerData.instance.paidLegEater;
         }
 

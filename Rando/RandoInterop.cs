@@ -1,4 +1,7 @@
-﻿using ItemChanger;
+﻿using System.Collections.Generic;
+using Modding;
+using ConnectionMetadataInjector;
+using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Tags;
 using ItemChanger.UIDefs;
@@ -7,7 +10,7 @@ namespace VendorRando {
     internal static class RandoInterop {
         public static void HookRandomizer() {
             RandoMenuPage.Hook();
-            RequestModifier2.HookRequestBuilder();
+            RequestModifier.HookRequestBuilder();
             LogicAdder.Hook();
 
             Container.DefineContainer<SlyContainer>();
@@ -15,8 +18,17 @@ namespace VendorRando {
             Container.DefineContainer<IseldaContainer>();
             Container.DefineContainer<LeggyContainer>();
             Container.DefineContainer<LemmContainer>();
+            
             DefineLocations();
             DefineItems();
+
+            if(ModHooks.GetMod("CondensedSpoilerLogger") is Mod) {
+                CondensedSpoilerLogger.AddCategory("Vendors", (args) => true, VendorAccessItems);
+            }
+
+            if(ModHooks.GetMod("RandoSettingsManager") is Mod) {
+                RSMInterop.Hook();
+            }
         }
 
         public static void DefineLocations() {
@@ -30,7 +42,7 @@ namespace VendorRando {
                 };
 
                 InteropTag tag = objLocation.AddTag<InteropTag>();
-                tag.Message = ConnectionMetadataInjector.SupplementalMetadata.InteropTagMessage;
+                tag.Message = SupplementalMetadata.InteropTagMessage;
                 tag.Properties["ModSource"] = VendorRando.instance.GetName();
                 tag.Properties["WorldMapLocations"] = new (string, float, float)[] {
                     (string.IsNullOrEmpty(altSceneName) ? sceneName : altSceneName, x, y)
@@ -57,15 +69,24 @@ namespace VendorRando {
             }) {
                 VendorItem vendorItem = new(name) { name = accessName };
                 InteropTag tag = vendorItem.AddTag<InteropTag>();
-                tag.Message = ConnectionMetadataInjector.SupplementalMetadata.InteropTagMessage;
+                tag.Message = SupplementalMetadata.InteropTagMessage;
                 tag.Properties["ModSource"] = VendorRando.instance.GetName();
+                tag.Properties["PinSprite"] = new EmbeddedSprite(sprite);
                 vendorItem.UIDef = new MsgUIDef {
                     name = new BoxedString(name),
-                    shopDesc = new BoxedString("You should never see this"),
+                    shopDesc = new BoxedString("You weren't supposed to see this"),
                     sprite = new EmbeddedSprite(sprite)
                 };
                 Finder.DefineCustomItem(vendorItem);
             }
         }
+
+        private static readonly List<string> VendorAccessItems = new() {
+            Consts.AccessSly,
+            Consts.AccessSalubra,
+            Consts.AccessIselda,
+            Consts.AccessLeggy,
+            Consts.AccessLemm
+        };
     }
 }
