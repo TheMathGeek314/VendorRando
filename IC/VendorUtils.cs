@@ -14,6 +14,7 @@ using ItemChanger.Util;
 using ItemChanger.Modules;
 using System.EnterpriseServices;
 using RandomizerMod.RandomizerData;
+using System.Drawing.Drawing2D;
 
 namespace VendorRando {
     //everything here is taken straight from ItemChanger with minor tweaks for scoping and compatibility
@@ -51,7 +52,10 @@ namespace VendorRando {
             else
                 up1.defaultShopItems = getDefaultShopItems(name);
             ups.Add(up1);
-            //none of this worked
+            /*if(name == Consts.Sly)
+                up1.defaultShopItems |= DefaultShopItems.SlyLantern | DefaultShopItems.SlyKeyElegantKey;
+            if(name == Consts.Iselda)
+                up1.defaultShopItems |= DefaultShopItems.IseldaQuill;*/
             /*if(name == Consts.Sly && Ref.Settings.Placements.TryGetValue(LocationNames.Sly_Key, out AbstractPlacement keyPlacement)) {
                 UniquePlacement upShopkey = new() {
                     placement = keyPlacement,
@@ -105,12 +109,22 @@ namespace VendorRando {
                     _ => null
                 };
                 DefaultShopItems? myItems = DefaultShopItems.None;
+                Dictionary<int, string[]> statsBools = new() {
+                    {0, [nameof(PlayerData.hasLantern), nameof(PlayerData.hasWhiteKey), nameof(PlayerData.hasQuill)] }
+                };
                 for(int i = 0; i < 18; i++) {
-                    ShopItemStats stats = new() { specialType = i };
+                    ShopItemStats stats = new() { specialType = i };//maybe something here with required bools?
                     DefaultShopItems? tempItem = ShopUtil.GetVanillaShopItemType(scene, stats);
                     if(tempItem != null)
                         myItems |= tempItem;
                 }
+                //because this sure didn't help
+                /*foreach(string requiredBools in new string[] { nameof(PlayerData.hasLantern), nameof(PlayerData.hasWhiteKey), nameof(PlayerData.hasQuill) }) {
+                    ShopItemStats stats = new() { specialType = 0, requiredPlayerDataBool = requiredBools };
+                    DefaultShopItems? tempItem = ShopUtil.GetVanillaShopItemType(scene, stats);
+                    if(tempItem != null)
+                        myItems |= tempItem;
+                }*/
                 myItems &= RandomizerMod.IC.Shops.GetDefaultShopItems(RandomizerMod.RandomizerMod.RS.GenerationSettings);
                 VendorRando.vlog($"\tDefault items for {name} after &= Rando: {myItems}");
                 return myItems.GetValueOrDefault();
