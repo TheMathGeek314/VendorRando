@@ -24,11 +24,8 @@ namespace VendorRando {
 
         public override GameObject GetNewContainer(ContainerInfo info) {
             GameObject npc = GetNewContainer(info);
-            VendorRando.vlog("FSMs found: " + npc.GetComponentsInChildren<PlayMakerFSM>(true).Length);
             foreach(PlayMakerFSM fsm in npc.GetComponentsInChildren<PlayMakerFSM>(true)) {
-                VendorRando.vlog($"Checking fsm {fsm.name}");
                 if(fsm.FsmName == "npc_control") {
-                    VendorRando.vlog("found mpc_control, adding QolSellAll");
                     npc.GetComponentInChildren<ContainerEnableConfig>(true).doMoreStuffs += QolSellAll;
                 }
                 break;
@@ -51,11 +48,8 @@ namespace VendorRando {
         }
 
         private void QolSellAll(PlayMakerFSM npcCtrl) {
-            VendorRando.vlog("QolSellAll");
             if(ModHooks.GetMod("QoL") is Mod) {
-                VendorRando.vlog("QoL is Mod");
                 if(QoL.Modules.NPCSellAll.LemmSellAll) {
-                    VendorRando.vlog("LemmSellAll");
                     npcCtrl.GetValidState("Convo End").AddAction(new SellAllAction());
                 }
             }

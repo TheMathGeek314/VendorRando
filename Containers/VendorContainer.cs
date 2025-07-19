@@ -36,10 +36,8 @@ namespace VendorRando {
             GameObject myMenu = GameObject.Instantiate(menuObject, new Vector3(8.53f, 0.54f, -1.8609f), Quaternion.identity);
             myMenu.SetActive(true);
             myObjects = new();
-            VendorRando.vlog("main container FSMs: " + npc.GetComponentsInChildren<PlayMakerFSM>().Length);
             foreach(PlayMakerFSM fsm in npc.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.FsmName == "npc_control") {
-                    VendorRando.vlog("found npc_control in generic container");
                     fsm.gameObject.AddComponent<ContainerEnableConfig>().setFsm(fsm);
                     break;
                 }
