@@ -29,7 +29,7 @@ namespace VendorRando {
             using Stream t = typeof(LogicAdder).Assembly.GetManifestResourceStream("VendorRando.Resources.terms.json");
             lmb.DeserializeFile(LogicFileType.Terms, fmt, t);
 
-            foreach(string accessName in new string[] { Consts.AccessSly, Consts.AccessSalubra, Consts.AccessIselda, Consts.AccessLeggy, Consts.AccessLemm }) {
+            foreach(string accessName in Consts.AccessNames) {
                 lmb.AddItem(new SingleItem(accessName, new TermValue(lmb.GetTerm(accessName), 1)));
             }
         }

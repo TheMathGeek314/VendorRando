@@ -69,7 +69,7 @@ namespace VendorRando {
                 switch(self.sceneName) {
                     case "Room_shop":
                         if(Settings.Sly) {
-                            foreach(string go in new string[] { "Basement Closed", "_Scenery/Shop Counter" }) {
+                            foreach(string go in new string[] { "Basement Closed/Shop Region", "_Scenery/Shop Counter" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
                                 }
@@ -79,7 +79,7 @@ namespace VendorRando {
                         break;
                     case "Room_Charm_Shop":
                         if(Settings.Salubra) {
-                            foreach(string go in new string[] { "Charm Slug", "shop_0000_a", "Shop Region" }) {
+                            foreach(string go in new string[] { "shop_0000_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
                                 }
@@ -89,7 +89,7 @@ namespace VendorRando {
                         break;
                     case "Room_mapper":
                         if(Settings.Iselda) {
-                            foreach(string go in new string[] { "Iselda", "_Scenery/Mapper_home_0001_a", "Shop Region" }) {
+                            foreach(string go in new string[] { "_Scenery/Mapper_home_0001_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
                                 }
@@ -99,7 +99,7 @@ namespace VendorRando {
                         break;
                     case "Fungus2_26":
                         if(Settings.LegEater) {
-                            foreach(string go in new string[] { "Leg Eater", "leg_eater_scenery_0004_a", "Shop Region" }) {
+                            foreach(string go in new string[] { "leg_eater_scenery_0004_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
                                 }
@@ -109,7 +109,7 @@ namespace VendorRando {
                         break;
                     case "Ruins1_05b":
                         if(Settings.Lemm) {
-                            foreach(string go in new string[] { "Relic Dealer", "antique_shop/antique_r_0007_a", "antique_shop/antique_r_0006_a", "antique_shop/ruins_clutter_0010_a", "Shop Region" }) {
+                            foreach(string go in new string[] { "antique_shop/antique_r_0007_a", "antique_shop/antique_r_0006_a", "antique_shop/ruins_clutter_0010_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
                                 }
@@ -150,14 +150,7 @@ namespace VendorRando {
 }
 // TODO
 //      Vanilla Salubra's Blessing kinda works but the video is black
-//      Make sure heights are properly corrected (see Geo_Rock-Deepnest_Below_Spike_Grub and *_Dupe)
-//          Take a look at dropping into place
-//      Lantern/e-key/quill don't appear if vendor stock contains no rando'd items
-//      Sly's dirtmouth room isn't working (except for other vendors?)
-//
-//  SWITCHING TO ACCESS-ITEM-CENTRIC DESIGN
-//      Also make sure to grant logical access upon interacting with any shop in any way
-//      Also update pin locations at runtime
+//      Update pin locations at runtime
 //
 //  DEPENDENCIES
 //      ConnectionMetadataInjector

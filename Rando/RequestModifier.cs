@@ -16,7 +16,7 @@ namespace VendorRando {
 
         public static void HookRequestBuilder() {
             _placements = typeof(ICFactory).GetField("_placements", BindingFlags.Instance | BindingFlags.NonPublic);
-            
+
             RequestBuilder.OnUpdate.Subscribe(-100, ApplyHutDefs);
             RequestBuilder.OnUpdate.Subscribe(-499, SetupItems);
             RequestBuilder.OnUpdate.Subscribe(101, RestrictPlacements);
@@ -105,9 +105,8 @@ namespace VendorRando {
             }
             foreach(ItemGroupBuilder igb in rb.EnumerateItemGroups()) {
                 if(igb.strategy is DefaultGroupPlacementStrategy dgps) {
-                    List<string> accessNames = new([Consts.AccessSly, Consts.AccessSalubra, Consts.AccessIselda, Consts.AccessLeggy, Consts.AccessLemm]);
                     dgps.ConstraintList.Add(new DefaultGroupPlacementStrategy.Constraint(
-                        (item, location) => !(accessNames.Contains(item.Name) && !mutables.Contains(location.Name)),
+                        (item, location) => !(Consts.AccessNames.Contains(item.Name) && !mutables.Contains(location.Name)),
                         Label: "Vendor Placement",
                         Fail: (item, location) => {
                             throw new OutOfLocationsException();

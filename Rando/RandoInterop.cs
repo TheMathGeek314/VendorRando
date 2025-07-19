@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Modding;
+﻿using Modding;
 using ConnectionMetadataInjector;
 using ItemChanger;
 using ItemChanger.Locations;
@@ -23,7 +22,7 @@ namespace VendorRando {
             DefineItems();
 
             if(ModHooks.GetMod("CondensedSpoilerLogger") is Mod) {
-                CondensedSpoilerLogger.AddCategory("Vendors", (args) => true, VendorAccessItems);
+                CondensedSpoilerLogger.AddCategory("Vendors", (args) => true, Consts.AccessNames);
             }
 
             if(ModHooks.GetMod("RandoSettingsManager") is Mod) {
@@ -80,13 +79,5 @@ namespace VendorRando {
                 Finder.DefineCustomItem(vendorItem);
             }
         }
-
-        private static readonly List<string> VendorAccessItems = new() {
-            Consts.AccessSly,
-            Consts.AccessSalubra,
-            Consts.AccessIselda,
-            Consts.AccessLeggy,
-            Consts.AccessLemm
-        };
     }
 }

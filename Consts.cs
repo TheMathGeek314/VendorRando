@@ -1,4 +1,6 @@
-﻿namespace VendorRando {
+﻿using System.Collections.Generic;
+
+namespace VendorRando {
     public static class Consts {
         public const string Sly = "Vr-Sly";
         public const string Salubra = "Vr-Salubra";
@@ -11,5 +13,8 @@
         public const string AccessLeggy = "Vr-Leggy-Access";
         public const string AccessLemm = "Vr-Lemm-Access";
         public const string AccessSly = "Vr-Sly-Access";
+
+        public static List<string> Names = [Sly, Salubra, Iselda, LegEater, Lemm];
+        public static List<string> AccessNames = [AccessSly, AccessSalubra, AccessIselda, AccessLeggy, AccessLemm];
     }
 }

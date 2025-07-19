@@ -10,10 +10,10 @@ namespace VendorRando {
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Basement Closed"];
-            npcOffset = new Vector3(0, 0, 0);//-17.2f, -6.4081f, 0.029f);
+            npcOffset = new Vector3(0, 0, 0);
             menuObject = preObjs["Shop Menu"];
             knightPosition = new Vector3(17.136f, 6.4081f);
-            addObject(preObjs, "_Scenery/Shop Counter", 17.17f, 5.68f, 0.023f);//-0.03f, -0.7281f, 0.023f);
+            addObject(preObjs, "_Scenery/Shop Counter", 17.17f, 5.68f, 0.023f);
         }
 
         public override GameObject GetNewContainer(ContainerInfo info) {
@@ -26,8 +26,8 @@ namespace VendorRando {
             return sly;
         }
 
-        protected override void editConvCtrl(PlayMakerFSM convCtrl, GameObject npc, GameObject shopRegion, GameObject shopMenu) {
-            base.editConvCtrl(convCtrl, npc, shopRegion, shopMenu);
+        protected override void editConvCtrl(PlayMakerFSM convCtrl, GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {
+            base.editConvCtrl(convCtrl, npc, shopRegion, shopMenu, tpAction);
             convCtrl.FsmVariables.GetFsmGameObject("Shop Menu").Value = shopMenu;
             convCtrl.GetValidState("Store Key").RemoveAction(0);//Find Shop Menu
             foreach((string state, int index, GameObject go) in new (string, int, GameObject)[] {
