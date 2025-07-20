@@ -32,7 +32,7 @@ namespace VendorRando {
                 checkRelics.Actions.IndexOf(relicComparison));
         }
 
-        public static void EditShopControl(PlayMakerFSM fsm, AbstractPlacement placement, string name) {
+        public static void EditShopControl(PlayMakerFSM fsm, AbstractPlacement placement, string name, string requiredBool = "") {
             DefaultShopItems dsi = new();
             if(placement != null)
                 dsi = ((ShopPlacement)placement).defaultShopItems;
@@ -41,10 +41,9 @@ namespace VendorRando {
             else
                 dsi = getDefaultShopItems(name);
             ShopMenuStock shop = fsm.gameObject.GetComponent<ShopMenuStock>();
-            shop.stock = GetNewStock(placement, name, dsi, shop.stock, ObjectCache.ShopItem);
+            shop.stock = GetNewStock(placement, name, dsi, shop.stock, ObjectCache.ShopItem, requiredBool);
             if(shop.stockAlt != null)
                 shop.stockAlt = GetNewAltStock(name, dsi, shop.stock, shop.stockAlt);
-
             FsmState chooseNoStockConvo = fsm.GetState("Choose Convo");
             bool hasBeenEdited = chooseNoStockConvo.GetTransition(4) != null;
             if(hasBeenEdited) {
@@ -66,9 +65,6 @@ namespace VendorRando {
                     _ => null
                 };
                 DefaultShopItems? myItems = DefaultShopItems.None;
-                Dictionary<int, string[]> statsBools = new() {
-                    {0, [nameof(PlayerData.hasLantern), nameof(PlayerData.hasWhiteKey), nameof(PlayerData.hasQuill)] }
-                };
                 for(int i = 1; i < 18; i++) {
                     ShopItemStats stats = new() { specialType = i };
                     DefaultShopItems? tempItem = ShopUtil.GetVanillaShopItemType(scene, stats);
@@ -86,7 +82,7 @@ namespace VendorRando {
             }
         }
 
-        public static GameObject[] GetNewStock(AbstractPlacement placement, string name, DefaultShopItems defaultShopItems, GameObject[] oldStock, GameObject shopPrefab) {
+        public static GameObject[] GetNewStock(AbstractPlacement placement, string name, DefaultShopItems defaultShopItems, GameObject[] oldStock, GameObject shopPrefab, string requiredBool) {
             List<GameObject> stock;
             if(placement != null)
                 stock = new(oldStock.Length + placement.Items.Count);
@@ -95,7 +91,7 @@ namespace VendorRando {
             void AddShopItem(AbstractItem item) {
                 GameObject shopItem = Object.Instantiate(shopPrefab);
                 shopItem.SetActive(false);
-                ApplyItemDef(placement, name, shopItem.GetComponent<ShopItemStats>(), item, item.GetTag<CostTag>()?.Cost);
+                ApplyItemDef(placement, name, shopItem.GetComponent<ShopItemStats>(), item, item.GetTag<CostTag>()?.Cost, requiredBool);
                 stock.Add(shopItem);
             }
             if(placement != null) {
@@ -129,7 +125,7 @@ namespace VendorRando {
         }
 
 #pragma warning disable CS8632 // The annotation for nullable reference types should only be used in code within a '#nullable' annotations context.
-        public static void ApplyItemDef(AbstractPlacement placement, string name, ShopItemStats stats, AbstractItem item, Cost? cost) {
+        public static void ApplyItemDef(AbstractPlacement placement, string name, ShopItemStats stats, AbstractItem item, Cost? cost, string requiredBool) {
             foreach(var m in stats.gameObject.GetComponents<ModShopItemStats>())
                 Object.Destroy(m); // Probably not necessary
 
@@ -146,7 +142,7 @@ namespace VendorRando {
             stats.playerDataBoolName = string.Empty;
             stats.nameConvo = string.Empty;
             stats.descConvo = string.Empty;
-            //stats.requiredPlayerDataBool = requiredBool;
+            stats.requiredPlayerDataBool = requiredBool;
             stats.removalPlayerDataBool = string.Empty;
             stats.dungDiscount = name == Consts.LegEater;
             stats.notchCostBool = string.Empty;

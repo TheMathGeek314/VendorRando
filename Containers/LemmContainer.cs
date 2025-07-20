@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
+using Modding;
 using UnityEngine;
 using HutongGames.PlayMaker;
-using Modding;
 using ItemChanger;
 using Satchel;
 
@@ -10,12 +10,13 @@ namespace VendorRando {
     public class LemmContainer: VendorContainer<LemmContainer> {
         public override string Name => Consts.Lemm;
         public override string VanillaPlacement => LocationNames.Lemm;
+        protected override float npcInteractOffset => 0.6f;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Relic Dealer"];
             npcOffset = new Vector3(53.5077f, 24.99f, 0.03f);
             menuObject = preObjs["Shop Menu"];
-            knightPosition = new Vector3(52.8284f, 23.4081f);
+            knightPosition = new Vector3(52.668f, 23.4081f);
             addObject(preObjs, "antique_shop/antique_r_0007_a", 51.7226f, 24.3305f, 0.0223f);
             addObject(preObjs, "antique_shop/antique_r_0006_a", 52.5207f, 22.916f, 0.0211f);
             //ruins_clutter_0010_a to be deleted in city but not added at check location

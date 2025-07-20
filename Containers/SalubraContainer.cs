@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using HutongGames.PlayMaker.Actions;
 using ItemChanger;
 using Satchel;
 
@@ -7,16 +8,17 @@ namespace VendorRando {
     public class SalubraContainer: VendorContainer<SalubraContainer> {
         public override string Name => Consts.Salubra;
         public override string VanillaPlacement => LocationNames.Salubra;
+        protected override float npcInteractOffset => 1.1f;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Charm Slug"];
             npcOffset = new Vector3(19.33f, 7.93f, 0.13f);
             menuObject = preObjs["Shop Menu"];
-            knightPosition = new Vector3(19.302f, 6.4081f);
+            knightPosition = new Vector3(19.202f, 6.4081f);
             addObject(preObjs, "shop_0000_a", 19.52f, 6.112f, 0.03f);
             addObject(preObjs, "Shop Region", 17.65f, 7.22f, 0.009f);
             addObject(preObjs, "Scene Blanker", 18.779f, 8.3673f, -0.005f);
-            addObject(preObjs, "Cinematic Player", 0, 0, -5.12f);
+            addObject(preObjs, "Cinematic Player", 0, 0, -5.12f, true);
         }
 
         protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, TrackProgression tpAction) {
@@ -39,6 +41,7 @@ namespace VendorRando {
             }) {
                 setTargetToGameObject(convCtrl.GetValidState(state), index, go);
             }
+            convCtrl.GetValidState("To Shop").GetFirstActionOfType<SetBoxCollider2DSize>().offsetX = npcInteractOffset;
         }
     }
 }

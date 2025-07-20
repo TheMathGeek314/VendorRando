@@ -7,6 +7,7 @@ namespace VendorRando {
     public class SlyContainer: VendorContainer<SlyContainer> {
         public override string Name => Consts.Sly;
         public override string VanillaPlacement => LocationNames.Sly;
+        protected override float npcInteractOffset => 0.6f;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Basement Closed"];
@@ -17,13 +18,21 @@ namespace VendorRando {
         }
 
         public override GameObject GetNewContainer(ContainerInfo info) {
-            GameObject sly = base.GetNewContainer(info, true);
-            foreach(PlayMakerFSM fsm in sly.GetComponentsInChildren<PlayMakerFSM>()) {
+            GameObject sly = GetNewContainer(info, true);
+            GameObject slyChild = sly.FindGameObjectInChildren("Basement Closed(Clone)(Clone)");
+            foreach(PlayMakerFSM fsm in slyChild.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.gameObject.name.StartsWith("Basement Closed") && fsm.FsmName.StartsWith("Control")) {
-                    sly.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);
+                    slyChild.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);
                 }
             }
+            foreach(string childName in new string[] { "Shop Region", "Sly Shop" }) {
+                slyChild.FindGameObjectInChildren(childName).SetActive(true);
+            }
             return sly;
+        }
+
+        protected override void doInteractOffset(GameObject go, float offset) {
+            base.doInteractOffset(go.FindGameObjectInChildren("Sly Shop"), offset);
         }
 
         protected override void editConvCtrl(PlayMakerFSM convCtrl, GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {

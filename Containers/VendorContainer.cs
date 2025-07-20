@@ -17,9 +17,10 @@ namespace VendorRando {
         protected static Vector3 npcOffset;
         protected static GameObject menuObject;
         protected static List<GameObject> otherObjects;
-        protected static List<Vector3> objectOffset;
+        protected static List<(Vector3, bool, bool, float)> objectOffset;
         protected static Vector3 knightPosition;
         protected List<GameObject> myObjects;
+        protected abstract float npcInteractOffset { get; }
 
         public abstract string VanillaPlacement { get; }
 
@@ -57,7 +58,7 @@ namespace VendorRando {
                 ob2.transform.parent = parent.transform;
             }
             myObjects.Add(npc);
-            objectOffset.Add(npcOffset);
+            objectOffset.Add((npcOffset, false, true, npcInteractOffset));
             parent.AddComponent<BoxCollider2D>();
             parent.layer = LayerMask.NameToLayer("Corpse");
             parent.AddComponent<DropIntoPlace>();
@@ -70,7 +71,18 @@ namespace VendorRando {
             obj.transform.position = new Vector3(x, y - elevation, 0);
             obj.SetActive(true);
             for(int i = 0; i < myObjects.Count; i++) {
-                myObjects[i].transform.localPosition = objectOffset[i] - knightPosition + new Vector3(0, 0.9f, 0);
+                if(objectOffset[i].Item2) {
+                    myObjects[i].transform.SetParent(null);
+                    myObjects[i].transform.position = objectOffset[i].Item1;
+                }
+                else {
+                    myObjects[i].transform.localPosition = (objectOffset[i].Item2 ? objectOffset[i].Item1 : objectOffset[i].Item1 - knightPosition + new Vector3(0, 0.9f, 0));
+                }
+                if(!(new string[] { "Charm Slug(Clone)(Clone)", "Leg Eater(Clone)(Clone)" }).Contains(myObjects.Last().name)) {
+                    if(objectOffset[i].Item3) {
+                        doInteractOffset(myObjects[i], objectOffset[i].Item4);
+                    }
+                }
                 myObjects[i].SetActive(true);
             }
         }
@@ -79,11 +91,16 @@ namespace VendorRando {
             ApplyTargetContext(obj, target.transform.position.x, target.transform.position.y, elevation);
         }
 
-        protected static void addObject(Dictionary<string, GameObject> po, string name, float x, float y, float z) {
+        protected virtual void doInteractOffset(GameObject go, float offset) {
+            BoxCollider2D box = go.GetComponent<BoxCollider2D>();
+            box.offset = new Vector2(offset, box.offset.y);
+        }
+
+        protected static void addObject(Dictionary<string, GameObject> po, string name, float x, float y, float z, bool absoluteLocation = false, bool isInteract = false, float interactX = 0) {
             otherObjects ??= new();
             objectOffset ??= new();
             otherObjects.Add(po[name]);
-            objectOffset.Add(new Vector3(x, y, z));
+            objectOffset.Add((new Vector3(x, y, z), absoluteLocation, isInteract, interactX));
         }
 
         protected virtual void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, TrackProgression tpAction) {
@@ -135,6 +152,9 @@ namespace VendorRando {
                     }
                     else {
                         VendorUtils.EditShopControl(fsm, null, Name);
+                    }
+                    if(Name == Consts.Sly && Ref.Settings.Placements.TryGetValue(LocationNames.Sly_Key, out AbstractPlacement keyPlacement)) {
+                        VendorUtils.EditShopControl(fsm, keyPlacement, Name, nameof(PlayerData.gaveSlykey));
                     }
                 }
                 if(fsm.FsmName == "Confirm Control") {

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using HutongGames.PlayMaker.Actions;
 using ItemChanger;
 using Satchel;
 
@@ -7,12 +8,13 @@ namespace VendorRando {
     public class LeggyContainer: VendorContainer<LeggyContainer> {
         public override string Name => Consts.LegEater;
         public override string VanillaPlacement => LocationNames.Leg_Eater;
+        protected override float npcInteractOffset => 1.4f;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Leg Eater"];
             npcOffset = new Vector3(45.677f, 6.035f, 0.01f);
             menuObject = preObjs["Shop Menu"];
-            knightPosition = new Vector3(45.9084f, 5.4081f);
+            knightPosition = new Vector3(45.8084f, 5.4081f);
             addObject(preObjs, "leg_eater_scenery_0004_a", 46.82f, 4.36f, 0.03f);
             addObject(preObjs, "Shop Region", 44.24f, 6.28f, 0.009f);
         }
@@ -32,6 +34,7 @@ namespace VendorRando {
             }) {
                 setTargetToGameObject(convCtrl.GetValidState(state), index, go);
             }
+            convCtrl.GetValidState("Something Bought").GetFirstActionOfType<SetBoxCollider2DSize>().offsetX = npcInteractOffset;
         }
     }
 }

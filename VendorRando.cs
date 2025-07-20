@@ -149,8 +149,8 @@ namespace VendorRando {
     }
 }
 // TODO
-//      Vanilla Salubra's Blessing kinda works but the video is black
 //      Update pin locations at runtime
+//      Verify offset interaction hitboxes
 //
 //  DEPENDENCIES
 //      ConnectionMetadataInjector

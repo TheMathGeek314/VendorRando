@@ -7,12 +7,13 @@ namespace VendorRando {
     public class IseldaContainer: VendorContainer<IseldaContainer> {
         public override string Name => Consts.Iselda;
         public override string VanillaPlacement => LocationNames.Iselda;
+        protected override float npcInteractOffset => 0;
 
         public static void definePrefabs(Dictionary<string, GameObject> preObjs) {
             npcObject = preObjs["Iselda"];
             npcOffset = new Vector3(19.84f, 7.25f, 0.195f);
             menuObject = preObjs["Shop Menu"];
-            knightPosition = new Vector3(18.97f, 6.4081f);
+            knightPosition = new Vector3(18.92f, 6.4081f);
             addObject(preObjs, "_Scenery/Mapper_home_0001_a", 18.71f, 8.22f, 0.16f);
             addObject(preObjs, "Shop Region", 17.33f, 7.04f, 0.009f);
         }
