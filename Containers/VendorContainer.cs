@@ -59,7 +59,9 @@ namespace VendorRando {
             }
             myObjects.Add(npc);
             objectOffset.Add((npcOffset, false, true, npcInteractOffset));
-            parent.AddComponent<BoxCollider2D>();
+            BoxCollider2D box = parent.AddComponent<BoxCollider2D>();
+            box.size = new Vector2(1, 2);
+            box.offset = new Vector2(0, 0.5f);
             parent.layer = LayerMask.NameToLayer("Corpse");
             parent.AddComponent<DropIntoPlace>();
             parent.AddComponent<ContainerInfoComponent>().info = info;

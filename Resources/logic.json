@@ -1,22 +1,22 @@
 [
   {
-    "name": "Vr-Sly",
+    "name": "Vr_Sly",
     "logic": "Room_shop[left1] + Rescued_Sly"
   },
   {
-    "name": "Vr-Salubra",
+    "name": "Vr_Salubra",
     "logic": "Room_Charm_Shop[left1]"
   },
   {
-    "name": "Vr-Iselda",
+    "name": "Vr_Iselda",
     "logic": "Room_mapper[left1]"
   },
   {
-    "name": "Vr-Leg_Eater",
+    "name": "Vr_Leg_Eater",
     "logic": "Fungus2_26[left1]"
   },
   {
-    "name": "Vr-Lemm",
+    "name": "Vr_Lemm",
     "logic": "Ruins1_05b[top1] + Ruins1_27[left1]/"
   }
 ]

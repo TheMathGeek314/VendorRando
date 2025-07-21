@@ -40,13 +40,9 @@ namespace VendorRando {
                     flingType = FlingType.DirectDeposit
                 };
 
-                InteropTag tag = objLocation.AddTag<InteropTag>();
-                tag.Message = SupplementalMetadata.InteropTagMessage;
-                tag.Properties["ModSource"] = VendorRando.instance.GetName();
-                tag.Properties["WorldMapLocations"] = new (string, float, float)[] {
-                    (string.IsNullOrEmpty(altSceneName) ? sceneName : altSceneName, x, y)
-                };
+                InteropTag tag = AddTag(objLocation);
                 tag.Properties["PinSprite"] = new EmbeddedSprite(sprite);
+                tag.Properties["WorldMapLocation"] = (string.IsNullOrEmpty(altSceneName) ? sceneName : altSceneName, x, y);
 
                 Finder.DefineCustomLocation(objLocation);
             }
@@ -54,7 +50,7 @@ namespace VendorRando {
             DefineLoc(Consts.Sly, SceneNames.Room_shop, "Sly Shop", "pin_shop_sly", 118f, 35f, SceneNames.Town);
             DefineLoc(Consts.Salubra, SceneNames.Room_Charm_Shop, "Charm Slug", "pin_charm_slug", 140f, 17f, SceneNames.Crossroads_04);
             DefineLoc(Consts.Iselda, SceneNames.Room_mapper, "Iselda", "pin_shop_mapper", 155f, 35f, SceneNames.Town);
-            DefineLoc(Consts.LegEater, SceneNames.Fungus2_26, "Leg Eater", "pin_shop_leg_eater", 55f, 8f);
+            DefineLoc(Consts.LegEater, SceneNames.Fungus2_26, "Leg Eater", "pin_shop_leg_eater", 55f, 12f);
             DefineLoc(Consts.Lemm, SceneNames.Ruins1_05b, "Relic Dealer", "pin_shop_relic_dealer", 53.3077f, 24.99f);
         }
 
@@ -67,9 +63,7 @@ namespace VendorRando {
                 (Consts.Lemm, Consts.AccessLemm, "pin_shop_relic_dealer")
             }) {
                 VendorItem vendorItem = new(name) { name = accessName };
-                InteropTag tag = vendorItem.AddTag<InteropTag>();
-                tag.Message = SupplementalMetadata.InteropTagMessage;
-                tag.Properties["ModSource"] = VendorRando.instance.GetName();
+                InteropTag tag = AddTag(vendorItem);
                 tag.Properties["PinSprite"] = new EmbeddedSprite(sprite);
                 vendorItem.UIDef = new MsgUIDef {
                     name = new BoxedString(name),
@@ -78,6 +72,13 @@ namespace VendorRando {
                 };
                 Finder.DefineCustomItem(vendorItem);
             }
+        }
+
+        public static InteropTag AddTag(TaggableObject obj) {
+            InteropTag tag = obj.GetOrAddTag<InteropTag>();
+            tag.Message = SupplementalMetadata.InteropTagMessage;
+            tag.Properties["ModSource"] = VendorRando.instance.GetName();
+            return tag;
         }
     }
 }

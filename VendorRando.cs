@@ -142,27 +142,5 @@ namespace VendorRando {
                 return false;
             }
         }
-
-        public static void vlog(string msg) {
-            Modding.Logger.Log($"[VendorRando] - {msg}");
-        }
     }
 }
-// TODO
-//      Update pin locations at runtime
-//      Verify offset interaction hitboxes
-//
-//  DEPENDENCIES
-//      ConnectionMetadataInjector
-//      ItemChanger
-//      MenuChanger
-//      RandomizerCore
-//      RandomizerCore.Json
-//      RandomizerMod
-//      Satchel
-//  INTEGRATIONS
-//      rando?
-//      CondensedSpoilerLogger
-//      QoL
-//      RandoSettingsManager
-//      map mod?

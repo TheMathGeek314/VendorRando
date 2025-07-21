@@ -5,6 +5,7 @@ using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Locations.SpecialLocations;
 using ItemChanger.Placements;
+using ItemChanger.Tags;
 using RandomizerCore.Exceptions;
 using RandomizerCore.Randomization;
 using RandomizerMod.RandomizerData;
@@ -20,6 +21,7 @@ namespace VendorRando {
             RequestBuilder.OnUpdate.Subscribe(-100, ApplyHutDefs);
             RequestBuilder.OnUpdate.Subscribe(-499, SetupItems);
             RequestBuilder.OnUpdate.Subscribe(101, RestrictPlacements);
+            RequestBuilder.OnUpdate.Subscribe(-99, EditShopPins);
         }
 
         public static void ApplyHutDefs(RequestBuilder rb) {
@@ -73,7 +75,6 @@ namespace VendorRando {
                 rb.EditItemRequest(accessItem, info => {
                     info.getItemDef = () => new ItemDef() {
                         Name = accessItem,
-                        Pool = "GeoRocks",
                         MajorItem = false,
                         PriceCap = 1
                     };
@@ -134,6 +135,35 @@ namespace VendorRando {
                     return true;
                 }
                 return false;
+            }
+        }
+
+        private static void EditShopPins(RequestBuilder rb) {
+            if(!VendorRando.Settings.Any)
+                return;
+            int horizontal = 0;
+            int pinSize = 25;
+            foreach((bool setting, string vanillaShop) in new (bool, string)[] {
+                (VendorRando.Settings.Sly, LocationNames.Sly),
+                (VendorRando.Settings.Sly, LocationNames.Sly_Key),
+                (VendorRando.Settings.Salubra, LocationNames.Salubra),
+                (VendorRando.Settings.Iselda, LocationNames.Iselda),
+                (VendorRando.Settings.LegEater, LocationNames.Leg_Eater),
+                (VendorRando.Settings.Lemm, LocationNames.Lemm)
+            }) {
+                if(setting) {
+                    if(vanillaShop != LocationNames.Sly_Key)
+                        horizontal++;
+                    int copy = horizontal;
+                    rb.EditLocationRequest(vanillaShop, info => {
+                        info.onPlacementFetch += (factory, randoPlacement, placement) => {
+                            ShopPlacement shop = placement as ShopPlacement;
+                            InteropTag tag = RandoInterop.AddTag(shop.Location);
+                            (string, float, float) wmLocation = (SceneNames.Ruins1_28, copy * pinSize + 15, 115 + (vanillaShop == LocationNames.Sly_Key ? pinSize : 0));
+                            tag.Properties["WorldMapLocation"] = wmLocation;
+                        };
+                    });
+                }
             }
         }
     }

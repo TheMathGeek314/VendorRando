@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Modding;
+using System.Collections.Generic;
 using System.Reflection;
-using Modding;
 using UnityEngine;
 using HutongGames.PlayMaker;
 using ItemChanger;

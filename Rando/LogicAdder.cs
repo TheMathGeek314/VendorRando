@@ -47,6 +47,9 @@ namespace VendorRando {
                     lmb.DoLogicEdit(new(location, access));
                 }
             }
+
+            if(VendorRando.Settings.LegEater)
+                lmb.DoSubst(new("Can_Repair_Fragile_Charms", "Fungus2_26[left1]", Consts.AccessLeggy));
         }
     }
 }
