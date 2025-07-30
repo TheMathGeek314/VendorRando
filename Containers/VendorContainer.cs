@@ -80,10 +80,8 @@ namespace VendorRando {
                 else {
                     myObjects[i].transform.localPosition = (objectOffset[i].Item2 ? objectOffset[i].Item1 : objectOffset[i].Item1 - knightPosition + new Vector3(0, 0.9f, 0));
                 }
-                if(!(new string[] { "Charm Slug(Clone)(Clone)", "Leg Eater(Clone)(Clone)" }).Contains(myObjects.Last().name)) {
-                    if(objectOffset[i].Item3) {
-                        doInteractOffset(myObjects[i], objectOffset[i].Item4);
-                    }
+                if(objectOffset[i].Item3) {
+                    doInteractOffset(myObjects[i], objectOffset[i].Item4);
                 }
                 myObjects[i].SetActive(true);
             }

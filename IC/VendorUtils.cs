@@ -56,14 +56,7 @@ namespace VendorRando {
                 checkRelics.Actions.IndexOf(relicComparison));
 
             DefaultShopItems getDefaultShopItems(string name) {
-                string scene = name switch {
-                    Consts.Sly => SceneNames.Room_shop,
-                    Consts.Salubra => SceneNames.Room_Charm_Shop,
-                    Consts.Iselda => SceneNames.Room_mapper,
-                    Consts.LegEater => SceneNames.Fungus2_26,
-                    Consts.Lemm => SceneNames.Ruins1_05b,
-                    _ => null
-                };
+                string scene = Consts.RoomNames[name];
                 DefaultShopItems? myItems = DefaultShopItems.None;
                 for(int i = 1; i < 18; i++) {
                     ShopItemStats stats = new() { specialType = i };
@@ -100,27 +93,13 @@ namespace VendorRando {
                 foreach(var item in placement.Items.Where(i => i.WasEverObtained()))
                     AddShopItem(item);
             }
-            string sceneName = name switch {
-                Consts.Sly => SceneNames.Room_shop,
-                Consts.Salubra => SceneNames.Room_Charm_Shop,
-                Consts.Iselda => SceneNames.Room_mapper,
-                Consts.LegEater => SceneNames.Fungus2_26,
-                Consts.Lemm => SceneNames.Ruins1_05b,
-                _ => null
-            };
+            string sceneName = Consts.RoomNames[name];
             stock.AddRange(oldStock.Where(g => KeepOldItem(g.GetComponent<ShopItemStats>(), sceneName, defaultShopItems)));
             return stock.ToArray();
         }
 
         public static GameObject[] GetNewAltStock(string name, DefaultShopItems defaultShopItems, GameObject[] newStock, GameObject[] altStock) {
-            string sceneName = name switch {
-                Consts.Sly => SceneNames.Room_shop,
-                Consts.Salubra => SceneNames.Room_Charm_Shop,
-                Consts.Iselda => SceneNames.Room_mapper,
-                Consts.LegEater => SceneNames.Fungus2_26,
-                Consts.Lemm => SceneNames.Ruins1_05b,
-                _ => null
-            };
+            string sceneName = Consts.RoomNames[name];
             return newStock.Union(altStock.Where(g => KeepOldItem(g.GetComponent<ShopItemStats>(), sceneName, defaultShopItems))).ToArray();
         }
 

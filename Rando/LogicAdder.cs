@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using ItemChanger;
 using RandomizerCore;
 using RandomizerCore.Json;
 using RandomizerCore.Logic;
@@ -35,16 +34,9 @@ namespace VendorRando {
         }
 
         private static void PatchLogic(GenerationSettings gs, LogicManagerBuilder lmb) {
-            foreach((bool setting, string location, string access) in new (bool, string, string)[] {
-                (VendorRando.Settings.Sly, LocationNames.Sly, Consts.AccessSly),
-                (VendorRando.Settings.Sly, LocationNames.Sly_Key, Consts.AccessSly + " + SHOPKEY"),
-                (VendorRando.Settings.Salubra, LocationNames.Salubra, Consts.AccessSalubra),
-                (VendorRando.Settings.Iselda, LocationNames.Iselda, Consts.AccessIselda),
-                (VendorRando.Settings.LegEater, LocationNames.Leg_Eater, Consts.AccessLeggy),
-                (VendorRando.Settings.Lemm, "Can_Visit_Lemm", Consts.AccessLemm)
-            }) {
-                if(setting) {
-                    lmb.DoLogicEdit(new(location, access));
+            foreach(VendorData data in Consts.vendorData(true)) {
+                if(data.enabled) {
+                    lmb.DoLogicEdit(new(data.logic, data.access));
                 }
             }
 

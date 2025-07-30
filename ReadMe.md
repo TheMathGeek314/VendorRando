@@ -25,3 +25,5 @@ Each shop will behave normally, including Sly's additional stock with shopkeeper
 
 ## Compatibilities
 Though not explicitly accounted for, LoreRando's cursed listening and MoreLocations's Lemm Shop have both been verified to function as intended.
+
+MultiWorld is not currently compatible with VendorRando.

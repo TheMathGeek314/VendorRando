@@ -25,26 +25,20 @@ namespace VendorRando {
         }
 
         public static void ApplyHutDefs(RequestBuilder rb) {
-            foreach((bool setting, string shop, string vanillaLocation) in new (bool, string, string)[] {
-                (VendorRando.Settings.Sly, Consts.Sly, LocationNames.Sly),
-                (VendorRando.Settings.Salubra, Consts.Salubra, LocationNames.Salubra),
-                (VendorRando.Settings.Iselda, Consts.Iselda, LocationNames.Iselda),
-                (VendorRando.Settings.LegEater, Consts.LegEater, LocationNames.Leg_Eater),
-                (VendorRando.Settings.Lemm, Consts.Lemm, LocationNames.Lemm)
-            }) {
-                if(setting) {
-                    rb.AddLocationByName(shop);
-                    rb.EditLocationRequest(shop, info => {
+            foreach(VendorData data in Consts.vendorData(false)) {
+                if(data.enabled) {
+                    rb.AddLocationByName(data.shop);
+                    rb.EditLocationRequest(data.shop, info => {
                         info.customPlacementFetch = (factory, placement) => {
-                            if(factory.TryFetchPlacement(shop, out AbstractPlacement ap))
+                            if(factory.TryFetchPlacement(data.shop, out AbstractPlacement ap))
                                 return ap;
                             var p = _placements.GetValue(factory) as Dictionary<string, AbstractPlacement>;
-                            if(p.TryGetValue(shop, out AbstractPlacement placement2))
+                            if(p.TryGetValue(data.shop, out AbstractPlacement placement2))
                                 return placement2;
                             else {
-                                if(p.ContainsKey(shop))
-                                    throw new ArgumentException($"Placement {shop} already exists!");
-                                AbstractLocation al = Finder.GetLocation(shop);
+                                if(p.ContainsKey(data.shop))
+                                    throw new ArgumentException($"Placement {data.shop} already exists!");
+                                AbstractLocation al = Finder.GetLocation(data.shop);
                                 al.flingType = FlingType.StraightUp;
                                 MutablePlacement mp = al.Wrap() as MutablePlacement;
                                 factory.AddPlacement(mp);
@@ -52,10 +46,10 @@ namespace VendorRando {
                             }
                         };
                         info.getLocationDef = () => new() {
-                            Name = shop,
+                            Name = data.shop,
                             FlexibleCount = false,
                             AdditionalProgressionPenalty = false,
-                            SceneName = Finder.GetLocation(vanillaLocation).sceneName
+                            SceneName = Finder.GetLocation(data.vanillaShop).sceneName
                         };
                     });
                 }
@@ -65,22 +59,16 @@ namespace VendorRando {
         private static void SetupItems(RequestBuilder rb) {
             if(!VendorRando.Settings.Any)
                 return;
-            foreach((bool setting, string accessItem) in new (bool, string)[] {
-                (VendorRando.Settings.Sly, Consts.AccessSly),
-                (VendorRando.Settings.Salubra, Consts.AccessSalubra),
-                (VendorRando.Settings.Iselda, Consts.AccessIselda),
-                (VendorRando.Settings.LegEater, Consts.AccessLeggy),
-                (VendorRando.Settings.Lemm, Consts.AccessLemm)
-            }) {
-                rb.EditItemRequest(accessItem, info => {
+            foreach(VendorData data in Consts.vendorData(false)) {
+                rb.EditItemRequest(data.access, info => {
                     info.getItemDef = () => new ItemDef() {
-                        Name = accessItem,
+                        Name = data.access,
                         MajorItem = false,
                         PriceCap = 1
                     };
                 });
-                if(setting) {
-                    rb.AddItemByName(accessItem);
+                if(data.enabled) {
+                    rb.AddItemByName(data.access);
                 }
             }
         }
@@ -94,15 +82,9 @@ namespace VendorRando {
                     foreach(string location in pool.IncludeLocations)
                         if(IsValidLocation(location))
                             mutables.Add(location);
-            foreach((bool setting, string vloc) in new (bool, string)[] {
-                (VendorRando.Settings.Sly, Consts.Sly),
-                (VendorRando.Settings.Salubra, Consts.Salubra),
-                (VendorRando.Settings.Iselda, Consts.Iselda),
-                (VendorRando.Settings.LegEater, Consts.LegEater),
-                (VendorRando.Settings.Lemm, Consts.Lemm)
-            }) {
-                if(setting)
-                    mutables.Add(vloc);
+            foreach(VendorData data in Consts.vendorData(false)) {
+                if(data.enabled)
+                    mutables.Add(data.shop);
             }
             foreach(ItemGroupBuilder igb in rb.EnumerateItemGroups()) {
                 if(igb.strategy is DefaultGroupPlacementStrategy dgps) {
@@ -143,23 +125,16 @@ namespace VendorRando {
                 return;
             int horizontal = 0;
             int pinSize = 25;
-            foreach((bool setting, string vanillaShop) in new (bool, string)[] {
-                (VendorRando.Settings.Sly, LocationNames.Sly),
-                (VendorRando.Settings.Sly, LocationNames.Sly_Key),
-                (VendorRando.Settings.Salubra, LocationNames.Salubra),
-                (VendorRando.Settings.Iselda, LocationNames.Iselda),
-                (VendorRando.Settings.LegEater, LocationNames.Leg_Eater),
-                (VendorRando.Settings.Lemm, LocationNames.Lemm)
-            }) {
-                if(setting) {
-                    if(vanillaShop != LocationNames.Sly_Key)
+            foreach(VendorData data in Consts.vendorData(true)) {
+                if(data.enabled) {
+                    if(data.vanillaShop != LocationNames.Sly_Key)
                         horizontal++;
                     int copy = horizontal;
-                    rb.EditLocationRequest(vanillaShop, info => {
+                    rb.EditLocationRequest(data.vanillaShop, info => {
                         info.onPlacementFetch += (factory, randoPlacement, placement) => {
                             ShopPlacement shop = placement as ShopPlacement;
                             InteropTag tag = RandoInterop.AddTag(shop.Location);
-                            (string, float, float) wmLocation = (SceneNames.Ruins1_28, copy * pinSize + 15, 115 + (vanillaShop == LocationNames.Sly_Key ? pinSize : 0));
+                            (string, float, float) wmLocation = (SceneNames.Ruins1_28, copy * pinSize + 15, 115 + (data.vanillaShop == LocationNames.Sly_Key ? pinSize : 0));
                             tag.Properties["WorldMapLocation"] = wmLocation;
                         };
                     });
