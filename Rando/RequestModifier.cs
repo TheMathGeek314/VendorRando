@@ -112,7 +112,7 @@ namespace VendorRando {
                     return true;
                 }
                 if(type == typeof(ObjectLocation)) {
-                    if(location == LocationNames.Resting_Grounds_Map)
+                    if(location == LocationNames.Resting_Grounds_Map || location == LocationNames.Elevator_Pass)
                         return false;
                     return true;
                 }
