@@ -19,8 +19,8 @@ namespace VendorRando {
             addObject(preObjs, "Shop Region", 44.24f, 6.28f, 0.009f);
         }
 
-        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, TrackProgression tpAction) {
-            base.setupShopRegion(npc, shopRegion, shopMenu, info, tpAction);
+        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {
+            base.setupShopRegion(npc, shopRegion, shopMenu, tpAction);
             shopRegion.GetComponent<BoxCollider2D>().enabled = PlayerData.instance.paidLegEater;
         }
 

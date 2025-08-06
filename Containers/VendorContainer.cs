@@ -45,14 +45,14 @@ namespace VendorRando {
             }
             if(regionIsChild) {
                 GameObject region = npc.FindGameObjectInChildren("Shop Region");
-                setupShopRegion(npc, region, myMenu, info, tpAction);
+                setupShopRegion(npc, region, myMenu, tpAction);
             }
             GameObject parent = new($"{Name} Container");
             npc.transform.parent = parent.transform;
             foreach(GameObject obj in otherObjects) {
                 GameObject ob2 = GameObject.Instantiate(obj);
                 if(ob2.name.StartsWith("Shop Region")) {
-                    setupShopRegion(npc, ob2, myMenu, info, tpAction);
+                    setupShopRegion(npc, ob2, myMenu, tpAction);
                 }
                 myObjects.Add(ob2);
                 ob2.transform.parent = parent.transform;
@@ -103,7 +103,7 @@ namespace VendorRando {
             objectOffset.Add((new Vector3(x, y, z), absoluteLocation, isInteract, interactX));
         }
 
-        protected virtual void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, TrackProgression tpAction) {
+        protected virtual void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {
             foreach(PlayMakerFSM fsm in npc.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.FsmName == "Conversation Control") {
                     editConvCtrl(fsm, npc, shopRegion, shopMenu, tpAction);
@@ -206,12 +206,14 @@ namespace VendorRando {
 
     public class TrackProgression: FsmStateAction {
         private AbstractItem item;
+        private AbstractPlacement placement;
         private string itemName;
         private string placementName;
 
         public TrackProgression(ContainerGiveInfo giveInfo) {
             item = giveInfo.items.First();
             itemName = item.name;
+            placement = giveInfo.placement;
             placementName = giveInfo.placement.Name;
         }
 
@@ -221,6 +223,7 @@ namespace VendorRando {
                 rs.TrackerData.OnItemObtained(tag.id, itemName, placementName);
                 rs.TrackerDataWithoutSequenceBreaks.OnItemObtained(tag.id, itemName, placementName);
             }
+            placement.AddVisitFlag(VisitState.Previewed);
             Finish();
         }
     }

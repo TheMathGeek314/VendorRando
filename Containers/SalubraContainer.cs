@@ -21,8 +21,8 @@ namespace VendorRando {
             addObject(preObjs, "Cinematic Player", 0, 0, -5.12f, true);
         }
 
-        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, ContainerInfo info, TrackProgression tpAction) {
-            base.setupShopRegion(npc, shopRegion, shopMenu, info, tpAction);
+        protected override void setupShopRegion(GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {
+            base.setupShopRegion(npc, shopRegion, shopMenu, tpAction);
             foreach(PlayMakerFSM fsm in npc.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.FsmName == "Give Blessing") {
                     setTargetToGameObject(fsm.GetValidState("End"), 4, shopRegion);//SHOP REGION ACTIVE
