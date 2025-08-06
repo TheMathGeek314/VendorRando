@@ -24,7 +24,7 @@ Each shop will behave normally, including Sly's additional stock with shopkeeper
 - **RandoSettingsManager**: When sharing a settings code, VendorRando settings will be included.
 
 ## Compatibilities
-Lemm's Shop from **MoreLocations** is verified to function as intended.
-Cursed Listening from **LoreRando** works, but vendors do not currently grant lore checks correctly.
-**MultiWorld** is not currently compatible with VendorRando, remote access items cause stock to be inaccessible.
-Area Blitz from **RandoPlus** may cause problems as vendors are not guaranteed to function at full flexible locations.
+- Lemm's Shop from **MoreLocations** is verified to function as intended.
+- Cursed Listening from **LoreRando** works, but vendors do not currently grant lore checks correctly.
+- **MultiWorld** is not currently compatible with VendorRando, remote access items cause stock to be inaccessible.
+- Area Blitz from **RandoPlus** may cause problems as vendors are not guaranteed to function at full flexible locations.
