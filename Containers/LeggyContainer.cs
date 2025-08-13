@@ -2,6 +2,7 @@
 using UnityEngine;
 using HutongGames.PlayMaker.Actions;
 using ItemChanger;
+using ItemChanger.Extensions;
 using Satchel;
 
 namespace VendorRando {
@@ -27,14 +28,16 @@ namespace VendorRando {
         protected override void editConvCtrl(PlayMakerFSM convCtrl, GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {
             base.editConvCtrl(convCtrl, npc, shopRegion, shopMenu, tpAction);
             convCtrl.FsmVariables.GetFsmGameObject("Shop Region").Value = shopRegion;
-            convCtrl.GetValidState("Init").RemoveAction(3);
+            FsmUtil.RemoveAction(convCtrl.GetValidState("Init"), 3);
             foreach((string state, int index, GameObject go) in new (string, int, GameObject)[] {
                 ("Dial Box Down 2", 3, npc),//NPC TITLE DOWN
                 ("Box Down", 1, npc)//NPC TITLE DOWN
             }) {
                 setTargetToGameObject(convCtrl.GetValidState(state), index, go);
             }
-            convCtrl.GetValidState("Something Bought").GetFirstActionOfType<SetBoxCollider2DSize>().offsetX = npcInteractOffset;
+            FsmUtil.GetFirstActionOfType<SetBoxCollider2DSize>(convCtrl.GetValidState("Something Bought")).offsetX = npcInteractOffset;
+            convCtrl.GetValidState("Convo Choice").RemoveFirstActionOfType<PlayerDataBoolAllTrue>();
+            convCtrl.GetValidState("All Gold?").RemoveTransitionsTo("No Shop");
         }
     }
 }
