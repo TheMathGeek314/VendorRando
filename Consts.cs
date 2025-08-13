@@ -35,7 +35,7 @@ namespace VendorRando {
                 new VendorData() { shop = Consts.Lemm, vanillaShop = LocationNames.Lemm, enabled = VendorRando.Settings.Lemm, logic = "Can_Visit_Lemm", access = Consts.AccessLemm }
             ];
             if(includeKey) {
-                data.Add(new VendorData() { shop = Consts.Sly, vanillaShop = LocationNames.Sly_Key, enabled = VendorRando.Settings.Sly, logic = LocationNames.Sly_Key, access = Consts.AccessSly + " + SHOPKEY" });
+                data.Insert(1, new VendorData() { shop = Consts.Sly, vanillaShop = LocationNames.Sly_Key, enabled = VendorRando.Settings.Sly, logic = LocationNames.Sly_Key, access = Consts.AccessSly + " + SHOPKEY" });
             }
             return data;
         };
