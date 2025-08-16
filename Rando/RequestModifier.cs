@@ -101,11 +101,6 @@ namespace VendorRando {
             bool IsValidLocation(string location) {
                 AbstractLocation loc = Finder.GetLocation(location);
                 Type type = loc.GetType();
-                var mp = loc.Wrap();
-                if(mp is not MutablePlacement)
-                    return false;
-                if(loc is DualLocation or AutoLocation or StagLocation or ShopLocation or ExistingFsmContainerLocation)
-                    return false;
                 if(type == typeof(CoordinateLocation)) {
                     if(loc.sceneName == SceneNames.RestingGrounds_07 || loc.sceneName == SceneNames.Crossroads_38 || location == LocationNames.Grimmchild || location == LocationNames.Stag_Nest_Stag)
                         return false;
@@ -113,6 +108,13 @@ namespace VendorRando {
                 }
                 if(type == typeof(ObjectLocation)) {
                     if(location == LocationNames.Resting_Grounds_Map || location == LocationNames.Elevator_Pass)
+                        return false;
+                    return true;
+                }
+                if(loc is ExistingFsmContainerLocation efcLoc && loc is not DivineLocation) {
+                    if(efcLoc.containerType != "Shiny")
+                        return false;
+                    if(location == LocationNames.Flukenest || location == LocationNames.City_Crest || location.StartsWith("Charm_Notch-") || location.StartsWith("Rancid_Egg-"))
                         return false;
                     return true;
                 }
