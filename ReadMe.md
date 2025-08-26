@@ -17,7 +17,7 @@ Rescuing Sly in lower Crossroads is not required before interacting with his sho
 Each shop will behave normally, including Sly's additional stock with shopkeeper's key, Salubra's charm requirements for some items, and Leg Eater's discounts with Defender's Crest equipped.
 
 
-## Integrations and Compatibilities
+## Integrations
 - **CondensedSpoilerLogger**: The condensed log will have a section for Vendors.
 - **QoL**: Lemm will still be able to sell all from the right side if the setting is enabled.
 - **RandoMapMod**: To avoid spoiling their locations, previewable shop pins are placed in the center of the map just above City Storerooms.
