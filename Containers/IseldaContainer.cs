@@ -28,6 +28,9 @@ namespace VendorRando {
             }) {
                 setTargetToGameObject(convCtrl.GetValidState(state), index, go);
             }
+            if(RandoInterop.loreExists) {
+                doLoreIntegration(convCtrl);
+            }
         }
     }
 }

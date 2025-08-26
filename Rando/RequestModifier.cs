@@ -114,7 +114,7 @@ namespace VendorRando {
                 if(loc is ExistingFsmContainerLocation efcLoc && loc is not DivineLocation) {
                     if(efcLoc.containerType != "Shiny")
                         return false;
-                    if(location == LocationNames.Flukenest || location == LocationNames.City_Crest || location.StartsWith("Charm_Notch-") || location.StartsWith("Rancid_Egg-"))
+                    if(location == LocationNames.Flukenest || location == LocationNames.City_Crest || location == LocationNames.Lifeblood_Core || location.StartsWith("Charm_Notch-") || location.StartsWith("Rancid_Egg-"))
                         return false;
                     return true;
                 }

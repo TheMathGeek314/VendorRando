@@ -42,6 +42,9 @@ namespace VendorRando {
                 setTargetToGameObject(convCtrl.GetValidState(state), index, go);
             }
             convCtrl.GetValidState("To Shop").GetFirstActionOfType<SetBoxCollider2DSize>().offsetX = npcInteractOffset;
+            if(RandoInterop.loreExists) {
+                doLoreIntegration(convCtrl);
+            }
         }
     }
 }

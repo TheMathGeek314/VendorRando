@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using HutongGames.PlayMaker;
 using HutongGames.PlayMaker.Actions;
 using ItemChanger;
 using ItemChanger.Components;
 using ItemChanger.Internal;
-using RandomizerMod.Settings;
+using LoreCore.Data;
+using LoreCore.Items;
 using RandomizerMod.IC;
+using RandomizerMod.Settings;
 using Satchel;
+using LoreCore.Locations;
 
 namespace VendorRando {
     public abstract class VendorContainer<T>: Container where T : VendorContainer<T> {
@@ -26,6 +30,9 @@ namespace VendorRando {
 
         public override bool SupportsInstantiate => true;
         public override bool SupportsDrop => true;
+
+        protected static PropertyInfo _CanListen;
+        protected static MethodInfo _ModifyDialogue;
 
         public override GameObject GetNewContainer(ContainerInfo info) {
             return GetNewContainer(info, false);
@@ -194,6 +201,35 @@ namespace VendorRando {
 
         protected virtual void editConvCtrl(PlayMakerFSM convCtrl, GameObject npc, GameObject shopRegion, GameObject shopMenu, TrackProgression tpAction) {
             convCtrl.GetValidState("Hero Look").AddAction(tpAction);
+        }
+
+        public static void setupLoreIntegration() {
+            Assembly loreAssembly = typeof(PowerLoreItem).Assembly;
+            _CanListen = loreAssembly.GetType("LoreCore.Items.ListenItem").GetProperty("CanListen", BindingFlags.Public | BindingFlags.Static);
+            _ModifyDialogue = typeof(DialogueLocation).GetMethod("ModifyDialogue", BindingFlags.NonPublic | BindingFlags.Static);
+        }
+
+        protected void doLoreIntegration(PlayMakerFSM fsm) {
+            if(!LoreRandomizer.LoreRandomizer.RandoSettings.Enabled || !LoreRandomizer.LoreRandomizer.RandoSettings.RandomizeNpc)
+                return;
+            string placementName = Name switch {
+                Consts.Iselda => LocationList.Iselda_Talk,
+                Consts.Salubra => LocationList.Salubra_Talk,
+                _ => null
+            };
+            try {
+                AbstractPlacement placement = Ref.Settings.Placements[placementName];
+                if(placement.Items.All(x => x.IsObtained()))
+                    return;
+                if(!(bool)_CanListen.GetValue(null)) {
+                    ItemChanger.Extensions.PlayMakerExtensions.ClearTransitions(fsm.gameObject.LocateMyFSM("npc_control").GetValidState("Idle"));
+                    return;
+                }
+                _ModifyDialogue.Invoke(null, [fsm, placement]);
+            }
+            catch(Exception e) {
+                Modding.Logger.LogError($"[LoreCore/VendorRando] - Failed to modify dialogue location. {e.ToString()}");
+            }
         }
     }
 

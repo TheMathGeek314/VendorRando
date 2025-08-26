@@ -7,6 +7,8 @@ using ItemChanger.UIDefs;
 
 namespace VendorRando {
     internal static class RandoInterop {
+        public static bool loreExists = false;
+
         public static void HookRandomizer() {
             RandoMenuPage.Hook();
             RequestModifier.HookRequestBuilder();
@@ -27,6 +29,12 @@ namespace VendorRando {
 
             if(ModHooks.GetMod("RandoSettingsManager") is Mod) {
                 RSMInterop.Hook();
+            }
+
+            if(ModHooks.GetMod("LoreCore") is Mod && ModHooks.GetMod("LoreRandomizer") is Mod) {
+                loreExists = true;
+                IseldaContainer.setupLoreIntegration();
+                SalubraContainer.setupLoreIntegration();
             }
         }
 

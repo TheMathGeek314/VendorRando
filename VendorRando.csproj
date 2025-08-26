@@ -84,6 +84,12 @@
     <Reference Include="ItemChanger">
       <HintPath>..\_dependencies\ItemChanger.dll</HintPath>
     </Reference>
+    <Reference Include="LoreCore">
+      <HintPath>..\_dependencies\LoreCore.dll</HintPath>
+    </Reference>
+    <Reference Include="LoreRandomizer">
+      <HintPath>..\_dependencies\LoreRandomizer.dll</HintPath>
+    </Reference>
     <Reference Include="MenuChanger">
       <HintPath>..\_dependencies\MenuChanger.dll</HintPath>
     </Reference>
