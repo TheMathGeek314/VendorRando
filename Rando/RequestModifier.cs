@@ -22,6 +22,7 @@ namespace VendorRando {
             RequestBuilder.OnUpdate.Subscribe(-499, SetupItems);
             RequestBuilder.OnUpdate.Subscribe(101, RestrictPlacements);
             RequestBuilder.OnUpdate.Subscribe(-99, EditShopPins);
+            RequestBuilder.OnUpdate.Subscribe(-499.5f, DefinePool);
         }
 
         public static void ApplyHutDefs(RequestBuilder rb) {
@@ -63,6 +64,7 @@ namespace VendorRando {
                 rb.EditItemRequest(data.access, info => {
                     info.getItemDef = () => new ItemDef() {
                         Name = data.access,
+                        Pool = "Vendor",
                         MajorItem = false,
                         PriceCap = 1
                     };
@@ -141,6 +143,28 @@ namespace VendorRando {
                         };
                     });
                 }
+            }
+        }
+
+        private static void DefinePool(RequestBuilder rb) {
+            if(!VendorRando.Settings.Any)
+                return;
+            ItemGroupBuilder vrGroup = null;
+            string label = RBConsts.SplitGroupPrefix + "Vendor";
+            foreach(ItemGroupBuilder igb in rb.EnumerateItemGroups()) {
+                if(igb.label == label) {
+                    vrGroup = igb;
+                    break;
+                }
+            }
+            vrGroup ??= rb.MainItemStage.AddItemGroup(label);
+
+            // Items need a pool for certain tools to function, but with how restricted the viable locations are,
+            // it wouldn't be wise to allow vendors to be manually or randomly assigned a pool group
+            rb.OnGetGroupFor.Subscribe(0.01f, ResolveVendorGroup);
+            bool ResolveVendorGroup(RequestBuilder rb, string item, RequestBuilder.ElementType type, out GroupBuilder gb) {
+                gb = default;
+                return false;
             }
         }
     }
