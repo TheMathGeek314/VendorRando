@@ -28,3 +28,4 @@ Each shop will behave normally, including Sly's additional stock with shopkeeper
 - ✔From **LoreRandomizer**, Salubra and Iselda will correcty grant lore checks when speaking on the right side. Sly's dialogue item will unlock his shop door but does not affect the vendor. Cursed Listening works as intended.
 - ❌**MultiWorld** is not currently compatible with VendorRando, remote access items cause stock to be inaccessible.
 - ❌Area Blitz from **RandoPlus** may cause problems as some items will be inaccessible if vendors are placed at full flexible locations.
+- ❌Iselda's Map Shop from **BugPrince** does not work correctly with VendorRando's Iselda
