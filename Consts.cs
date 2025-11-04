@@ -28,14 +28,14 @@ namespace VendorRando {
 
         public static readonly Func<bool, List<VendorData>> vendorData = includeKey => {
             List<VendorData> data = [
-                new VendorData() { shop = Consts.Sly, vanillaShop = LocationNames.Sly, enabled = VendorRando.Settings.Sly, logic = LocationNames.Sly, access = Consts.AccessSly },
-                new VendorData() { shop = Consts.Salubra, vanillaShop = LocationNames.Salubra, enabled = VendorRando.Settings.Salubra, logic = LocationNames.Salubra, access = Consts.AccessSalubra },
-                new VendorData() { shop = Consts.Iselda, vanillaShop = LocationNames.Iselda, enabled = VendorRando.Settings.Iselda, logic = LocationNames.Iselda, access = Consts.AccessIselda },
-                new VendorData() { shop = Consts.LegEater, vanillaShop = LocationNames.Leg_Eater, enabled = VendorRando.Settings.LegEater, logic = LocationNames.Leg_Eater, access = Consts.AccessLeggy },
-                new VendorData() { shop = Consts.Lemm, vanillaShop = LocationNames.Lemm, enabled = VendorRando.Settings.Lemm, logic = "Can_Visit_Lemm", access = Consts.AccessLemm }
+                new VendorData() { shop = Consts.Sly, vanillaShop = LocationNames.Sly, enabled = VendorRando.globalSettings.Sly, logic = LocationNames.Sly, access = Consts.AccessSly },
+                new VendorData() { shop = Consts.Salubra, vanillaShop = LocationNames.Salubra, enabled = VendorRando.globalSettings.Salubra, logic = LocationNames.Salubra, access = Consts.AccessSalubra },
+                new VendorData() { shop = Consts.Iselda, vanillaShop = LocationNames.Iselda, enabled = VendorRando.globalSettings.Iselda, logic = LocationNames.Iselda, access = Consts.AccessIselda },
+                new VendorData() { shop = Consts.LegEater, vanillaShop = LocationNames.Leg_Eater, enabled = VendorRando.globalSettings.LegEater, logic = LocationNames.Leg_Eater, access = Consts.AccessLeggy },
+                new VendorData() { shop = Consts.Lemm, vanillaShop = LocationNames.Lemm, enabled = VendorRando.globalSettings.Lemm, logic = "Can_Visit_Lemm", access = Consts.AccessLemm }
             ];
             if(includeKey) {
-                data.Insert(1, new VendorData() { shop = Consts.Sly, vanillaShop = LocationNames.Sly_Key, enabled = VendorRando.Settings.Sly, logic = LocationNames.Sly_Key, access = Consts.AccessSly + " + SHOPKEY" });
+                data.Insert(1, new VendorData() { shop = Consts.Sly, vanillaShop = LocationNames.Sly_Key, enabled = VendorRando.globalSettings.Sly, logic = LocationNames.Sly_Key, access = Consts.AccessSly + " + SHOPKEY" });
             }
             return data;
         };

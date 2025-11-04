@@ -31,7 +31,7 @@ namespace VendorRando {
 
         private void SetTopLevelButtonColor() {
             if(JumpToVRButton != null) {
-                JumpToVRButton.Text.color = VendorRando.Settings.Any ? Colors.TRUE_COLOR : Colors.DEFAULT_COLOR;
+                JumpToVRButton.Text.color = VendorRando.globalSettings.Any ? Colors.TRUE_COLOR : Colors.DEFAULT_COLOR;
             }
         }
 
@@ -39,7 +39,7 @@ namespace VendorRando {
 
         private RandoMenuPage(MenuPage landingPage) {
             VendorRandoPage = new MenuPage(Localize("VendorRando"), landingPage);
-            vrMEF = new(VendorRandoPage, VendorRando.Settings);
+            vrMEF = new(VendorRandoPage, VendorRando.globalSettings);
             vrVIP = new(VendorRandoPage, new(0, 300), 75f, true, vrMEF.Elements);
             Localize(vrMEF);
             foreach(IValueElement e in vrMEF.Elements) {

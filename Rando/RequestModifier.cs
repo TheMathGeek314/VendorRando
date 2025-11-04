@@ -10,6 +10,7 @@ using RandomizerCore.Exceptions;
 using RandomizerCore.Randomization;
 using RandomizerMod.RandomizerData;
 using RandomizerMod.RC;
+using RandomizerMod.Settings;
 
 namespace VendorRando {
     public class RequestModifier {
@@ -23,6 +24,7 @@ namespace VendorRando {
             RequestBuilder.OnUpdate.Subscribe(101, RestrictPlacements);
             RequestBuilder.OnUpdate.Subscribe(-99, EditShopPins);
             RequestBuilder.OnUpdate.Subscribe(-499.5f, DefinePool);
+            RequestBuilder.OnUpdate.Subscribe(0, CopyGlobalToLocal);
         }
 
         public static void ApplyHutDefs(RequestBuilder rb) {
@@ -58,7 +60,7 @@ namespace VendorRando {
         }
 
         private static void SetupItems(RequestBuilder rb) {
-            if(!VendorRando.Settings.Any)
+            if(!VendorRando.globalSettings.Any)
                 return;
             foreach(VendorData data in Consts.vendorData(false)) {
                 rb.EditItemRequest(data.access, info => {
@@ -76,7 +78,7 @@ namespace VendorRando {
         }
 
         private static void RestrictPlacements(RequestBuilder rb) {
-            if(!VendorRando.Settings.Any)
+            if(!VendorRando.globalSettings.Any)
                 return;
             List<string> mutables = new();
             foreach(var pool in Data.Pools)
@@ -125,7 +127,7 @@ namespace VendorRando {
         }
 
         private static void EditShopPins(RequestBuilder rb) {
-            if(!VendorRando.Settings.Any)
+            if(!VendorRando.globalSettings.Any)
                 return;
             int horizontal = 0;
             int pinSize = 25;
@@ -147,7 +149,7 @@ namespace VendorRando {
         }
 
         private static void DefinePool(RequestBuilder rb) {
-            if(!VendorRando.Settings.Any)
+            if(!VendorRando.globalSettings.Any)
                 return;
             ItemGroupBuilder vrGroup = null;
             string label = RBConsts.SplitGroupPrefix + "Vendor";
@@ -166,6 +168,16 @@ namespace VendorRando {
                 gb = default;
                 return false;
             }
+        }
+
+        private static void CopyGlobalToLocal(RequestBuilder rb) {
+            LocalSettings l = VendorRando.localSettings;
+            GlobalSettings g = VendorRando.globalSettings;
+            l.Sly = g.Sly;
+            l.Salubra = g.Salubra;
+            l.Iselda = g.Iselda;
+            l.LegEater = g.LegEater;
+            l.Lemm = g.Lemm;
         }
     }
 }

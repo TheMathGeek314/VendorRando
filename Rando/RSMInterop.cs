@@ -20,7 +20,7 @@ namespace VendorRando {
         }
 
         public override bool TryProvideSettings(out GlobalSettings settings) {
-            settings = VendorRando.Settings;
+            settings = VendorRando.globalSettings;
             return settings.Any;
         }
     }

@@ -6,13 +6,17 @@ using ItemChanger;
 using RandomizerMod.IC;
 
 namespace VendorRando {
-    public class VendorRando: Mod, IGlobalSettings<GlobalSettings> {
+    public class VendorRando: Mod, IGlobalSettings<GlobalSettings>, ILocalSettings<LocalSettings> {
         new public string GetName() => "VendorRando";
-        public override string GetVersion() => "1.0.2.1";
+        public override string GetVersion() => "1.0.2.2";
 
-        public static GlobalSettings Settings { get; set; } = new();
-        public void OnLoadGlobal(GlobalSettings s) => Settings = s;
-        public GlobalSettings OnSaveGlobal() => Settings;
+        public static GlobalSettings globalSettings { get; set; } = new();
+        public void OnLoadGlobal(GlobalSettings s) => globalSettings = s;
+        public GlobalSettings OnSaveGlobal() => globalSettings;
+
+        public static LocalSettings localSettings { get; set; } = new();
+        public void OnLoadLocal(LocalSettings s) => localSettings = s;
+        public LocalSettings OnSaveLocal() => localSettings;
 
         internal static VendorRando instance;
 
@@ -68,7 +72,7 @@ namespace VendorRando {
             if(IsRandoSave()) {
                 switch(self.sceneName) {
                     case "Room_shop":
-                        if(Settings.Sly) {
+                        if(localSettings.Sly) {
                             foreach(string go in new string[] { "Basement Closed/Shop Region", "_Scenery/Shop Counter" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
@@ -78,7 +82,7 @@ namespace VendorRando {
                         }
                         break;
                     case "Room_Charm_Shop":
-                        if(Settings.Salubra) {
+                        if(localSettings.Salubra) {
                             foreach(string go in new string[] { "shop_0000_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
@@ -88,7 +92,7 @@ namespace VendorRando {
                         }
                         break;
                     case "Room_mapper":
-                        if(Settings.Iselda) {
+                        if(localSettings.Iselda) {
                             foreach(string go in new string[] { "_Scenery/Mapper_home_0001_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
@@ -98,7 +102,7 @@ namespace VendorRando {
                         }
                         break;
                     case "Fungus2_26":
-                        if(Settings.LegEater) {
+                        if(localSettings.LegEater) {
                             foreach(string go in new string[] { "leg_eater_scenery_0004_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
@@ -108,7 +112,7 @@ namespace VendorRando {
                         }
                         break;
                     case "Ruins1_05b":
-                        if(Settings.Lemm) {
+                        if(localSettings.Lemm) {
                             foreach(string go in new string[] { "antique_shop/antique_r_0007_a", "antique_shop/antique_r_0006_a", "antique_shop/ruins_clutter_0010_a", "Shop Region" }) {
                                 try {
                                     GameObject.Find(go).SetActive(false);
@@ -118,7 +122,7 @@ namespace VendorRando {
                         }
                         break;
                     case "Crossroads_04":
-                        if(Settings.Salubra) {
+                        if(localSettings.Salubra) {
                             GameObject.Find("Audio Salubra").SetActive(false);
                         }
                         break;
@@ -134,6 +138,8 @@ namespace VendorRando {
         }
 
         public static bool IsRandoSave() {
+            if(localSettings.OverrideIsRando)
+                return true;
             try {
                 RandomizerModule module = ItemChangerMod.Modules.Get<RandomizerModule>();
                 return module is not null;

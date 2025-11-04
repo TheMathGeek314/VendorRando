@@ -15,7 +15,7 @@ namespace VendorRando {
         }
 
         private static void ApplyLogic(GenerationSettings gs, LogicManagerBuilder lmb) {
-            if(!VendorRando.Settings.Any)
+            if(!VendorRando.globalSettings.Any)
                 return;
             JsonLogicFormat fmt = new();
             using Stream s = typeof(LogicAdder).Assembly.GetManifestResourceStream("VendorRando.Resources.logic.json");
@@ -40,7 +40,7 @@ namespace VendorRando {
                 }
             }
 
-            if(VendorRando.Settings.LegEater)
+            if(VendorRando.globalSettings.LegEater)
                 lmb.DoSubst(new("Can_Repair_Fragile_Charms", "Fungus2_26[left1]", Consts.AccessLeggy));
         }
     }
