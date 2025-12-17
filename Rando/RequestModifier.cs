@@ -10,7 +10,6 @@ using RandomizerCore.Exceptions;
 using RandomizerCore.Randomization;
 using RandomizerMod.RandomizerData;
 using RandomizerMod.RC;
-using RandomizerMod.Settings;
 
 namespace VendorRando {
     public class RequestModifier {
@@ -25,6 +24,7 @@ namespace VendorRando {
             RequestBuilder.OnUpdate.Subscribe(-99, EditShopPins);
             RequestBuilder.OnUpdate.Subscribe(-499.5f, DefinePool);
             RequestBuilder.OnUpdate.Subscribe(0, CopyGlobalToLocal);
+            RequestBuilder.OnUpdate.Subscribe(0, CheckCompatibilities);
         }
 
         public static void ApplyHutDefs(RequestBuilder rb) {
@@ -178,6 +178,10 @@ namespace VendorRando {
             l.Iselda = g.Iselda;
             l.LegEater = g.LegEater;
             l.Lemm = g.Lemm;
+        }
+
+        private static void CheckCompatibilities(RequestBuilder rb) {
+            CompatibilityChecks.Run();
         }
     }
 }

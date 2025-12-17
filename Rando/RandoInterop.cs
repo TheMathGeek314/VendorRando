@@ -36,6 +36,10 @@ namespace VendorRando {
                 IseldaContainer.setupLoreIntegration();
                 SalubraContainer.setupLoreIntegration();
             }
+            
+            if(ModHooks.GetMod("MultiWorldMod") is Mod) {
+                CompatibilityChecks.PatchMultiWorld();
+            }
         }
 
         public static void DefineLocations() {

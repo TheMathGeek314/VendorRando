@@ -72,6 +72,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>$(HollowKnightRefs)/Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
+    <Reference Include="BugPrince">
+      <HintPath>..\_dependencies\BugPrince.dll</HintPath>
+    </Reference>
     <Reference Include="CondensedSpoilerLogger">
       <HintPath>..\_dependencies\CondensedSpoilerLogger.dll</HintPath>
     </Reference>
@@ -111,6 +114,9 @@
     <Reference Include="MonoMod.Utils">
       <HintPath>$(HollowKnightRefs)/MonoMod.Utils.dll</HintPath>
     </Reference>
+    <Reference Include="MultiWorldMod">
+      <HintPath>..\_dependencies\MultiWorldMod.dll</HintPath>
+    </Reference>
     <Reference Include="netstandard">
       <HintPath>$(HollowKnightRefs)/netstandard.dll</HintPath>
     </Reference>
@@ -131,6 +137,9 @@
     </Reference>
     <Reference Include="RandomizerMod">
       <HintPath>..\_dependencies\RandomizerMod.dll</HintPath>
+    </Reference>
+    <Reference Include="RandoPlus">
+      <HintPath>..\_dependencies\RandoPlus.dll</HintPath>
     </Reference>
     <Reference Include="RandoSettingsManager">
       <HintPath>..\_dependencies\RandoSettingsManager.dll</HintPath>
