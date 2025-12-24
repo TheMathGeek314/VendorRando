@@ -19,7 +19,7 @@ namespace VendorRando {
 
         public override GameObject GetNewContainer(ContainerInfo info) {
             GameObject sly = GetNewContainer(info, true);
-            GameObject slyChild = sly.FindGameObjectInChildren("Basement Closed(Clone)(Clone)");
+            GameObject slyChild = sly.FindGameObjectInChildren("Basement Closed(Clone)");
             foreach(PlayMakerFSM fsm in slyChild.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.gameObject.name.StartsWith("Basement Closed") && fsm.FsmName.StartsWith("Control")) {
                     slyChild.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);
