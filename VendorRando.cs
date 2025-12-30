@@ -8,7 +8,7 @@ using RandomizerMod.IC;
 namespace VendorRando {
     public class VendorRando: Mod, IGlobalSettings<GlobalSettings>, ILocalSettings<LocalSettings> {
         new public string GetName() => "VendorRando";
-        public override string GetVersion() => "1.1.0.1";
+        public override string GetVersion() => "1.1.0.2";
 
         public static GlobalSettings globalSettings { get; set; } = new();
         public void OnLoadGlobal(GlobalSettings s) => globalSettings = s;

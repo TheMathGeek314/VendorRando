@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using ItemChanger;
 using Satchel;
@@ -19,7 +20,7 @@ namespace VendorRando {
 
         public override GameObject GetNewContainer(ContainerInfo info) {
             GameObject sly = GetNewContainer(info, true);
-            GameObject slyChild = sly.FindGameObjectInChildren("Basement Closed(Clone)");
+            GameObject slyChild = sly.GetComponentsInChildren<Transform>(true).First(c => c.name.StartsWith("Basement Closed(Clone)")).gameObject;
             foreach(PlayMakerFSM fsm in slyChild.GetComponentsInChildren<PlayMakerFSM>()) {
                 if(fsm.gameObject.name.StartsWith("Basement Closed") && fsm.FsmName.StartsWith("Control")) {
                     slyChild.GetComponent<PlayMakerFSM>().GetValidState("Check").RemoveAction(0);
