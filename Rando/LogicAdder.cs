@@ -47,8 +47,10 @@ namespace VendorRando {
         }
 
         private static void PatchLore(GenerationSettings gs, LogicManagerBuilder lmb) {
-            lmb.DoSubst(new("Salubra_Talk", "Room_Charm_Shop[left1]", Consts.AccessSalubra));
-            lmb.DoSubst(new("Iselda_Talk", "Room_mapper[left1]", Consts.AccessIselda));
+            if(LoreRandomizer.LoreRandomizer.RandoSettings.RandomizeNpc && LoreRandomizer.LoreRandomizer.RandoSettings.Enabled) {
+                lmb.DoSubst(new("Salubra_Talk", "Room_Charm_Shop[left1]", Consts.AccessSalubra));
+                lmb.DoSubst(new("Iselda_Talk", "Room_mapper[left1]", Consts.AccessIselda));
+            }
         }
     }
 }
