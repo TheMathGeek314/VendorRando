@@ -12,6 +12,8 @@ namespace VendorRando {
         public static void Hook() {
             RCData.RuntimeLogicOverride.Subscribe(50, ApplyLogic);
             RCData.RuntimeLogicOverride.Subscribe(50, PatchLogic);
+            if(Modding.ModHooks.GetMod("LoreRandomizer") is Modding.Mod)
+                RCData.RuntimeLogicOverride.Subscribe(12345f, PatchLore);
         }
 
         private static void ApplyLogic(GenerationSettings gs, LogicManagerBuilder lmb) {
@@ -42,6 +44,11 @@ namespace VendorRando {
 
             if(VendorRando.globalSettings.LegEater)
                 lmb.DoSubst(new("Can_Repair_Fragile_Charms", "Fungus2_26[left1]", Consts.AccessLeggy));
+        }
+
+        private static void PatchLore(GenerationSettings gs, LogicManagerBuilder lmb) {
+            lmb.DoSubst(new("Salubra_Talk", "Room_Charm_Shop[left1]", Consts.AccessSalubra));
+            lmb.DoSubst(new("Iselda_Talk", "Room_mapper[left1]", Consts.AccessIselda));
         }
     }
 }
