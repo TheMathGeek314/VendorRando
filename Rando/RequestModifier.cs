@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Modding;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using ItemChanger;
@@ -14,12 +15,14 @@ using RandomizerMod.RC;
 namespace VendorRando {
     public class RequestModifier {
         private static FieldInfo _placements;
+        private static bool randoPlusGhostsActive = false;
 
         public static void HookRequestBuilder() {
             _placements = typeof(ICFactory).GetField("_placements", BindingFlags.Instance | BindingFlags.NonPublic);
 
             RequestBuilder.OnUpdate.Subscribe(-100, ApplyHutDefs);
             RequestBuilder.OnUpdate.Subscribe(-499, SetupItems);
+            RequestBuilder.OnUpdate.Subscribe(0, CheckForGhosts);
             RequestBuilder.OnUpdate.Subscribe(101, RestrictPlacements);
             RequestBuilder.OnUpdate.Subscribe(-99, EditShopPins);
             RequestBuilder.OnUpdate.Subscribe(-499.5f, DefinePool);
@@ -77,6 +80,17 @@ namespace VendorRando {
             }
         }
 
+        private static void CheckForGhosts(RequestBuilder rb) {
+            if(ModHooks.GetMod("RandoPlus") is Mod)
+                checkForGhostsButForRealThisTime();
+            else
+                randoPlusGhostsActive = false;
+        }
+
+        private static void checkForGhostsButForRealThisTime() {
+            randoPlusGhostsActive = RandoPlus.RandoPlus.GS.GhostEssence;
+        }
+
         private static void RestrictPlacements(RequestBuilder rb) {
             if(!VendorRando.globalSettings.Any)
                 return;
@@ -98,6 +112,11 @@ namespace VendorRando {
                         Fail: (item, location) => {
                             throw new OutOfLocationsException();
                         }
+                    ));
+                    dgps.ConstraintList.Add(new DefaultGroupPlacementStrategy.Constraint(
+                        (item, location) => !randoPlusGhostsActive || !(Consts.AccessNames.Contains(item.Name) && location.Name == LocationNames.Jonis_Blessing),
+                        Label: "Vendor Joni Conflict",
+                        Fail: (item, location) => throw new OutOfLocationsException()
                     ));
                 }
             }
