@@ -1,4 +1,6 @@
-﻿namespace VendorRando {
+﻿using Newtonsoft.Json;
+
+namespace VendorRando {
     public class GlobalSettings {
         public bool Sly = false;
         public bool Salubra = false;
@@ -6,6 +8,7 @@
         public bool LegEater = false;
         public bool Lemm = false;
 
+        [JsonIgnore]
         public bool Any => Sly
                         || Salubra
                         || Iselda

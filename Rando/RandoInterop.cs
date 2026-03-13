@@ -1,9 +1,11 @@
 ﻿using Modding;
-using ConnectionMetadataInjector;
+using System.IO;
 using ItemChanger;
 using ItemChanger.Locations;
 using ItemChanger.Tags;
 using ItemChanger.UIDefs;
+using RandomizerMod.Logging;
+using RandomizerMod.RandomizerData;
 
 namespace VendorRando {
     internal static class RandoInterop {
@@ -22,6 +24,8 @@ namespace VendorRando {
             
             DefineLocations();
             DefineItems();
+
+            SettingsLog.AfterLogSettings += LogRandoSettings;
 
             if(ModHooks.GetMod("CondensedSpoilerLogger") is Mod) {
                 CondensedSpoilerLogger.AddCategory("Vendors", (args) => true, Consts.AccessNames);
@@ -86,9 +90,14 @@ namespace VendorRando {
             }
         }
 
+        private static void LogRandoSettings(LogArguments args, TextWriter w) {
+            w.WriteLine("Logging VendorRando settings:");
+            w.WriteLine(JsonUtil.Serialize(VendorRando.globalSettings));
+        }
+
         public static InteropTag AddTag(TaggableObject obj) {
             InteropTag tag = obj.GetOrAddTag<InteropTag>();
-            tag.Message = SupplementalMetadata.InteropTagMessage;
+            tag.Message = "RandoSupplementalMetadata";
             tag.Properties["ModSource"] = VendorRando.instance.GetName();
             return tag;
         }
