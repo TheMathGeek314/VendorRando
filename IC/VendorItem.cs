@@ -8,6 +8,7 @@ namespace VendorRando {
         public VendorItem(string container) {
             this.container = container;
             AddTag<PersistentItemTag>().Persistence = Persistence.Persistent;
+            AddTag<CompletionWeightTag>().Weight = 0;
         }
         public override string GetPreferredContainer() => container;
     }
